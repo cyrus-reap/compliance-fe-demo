@@ -2,8 +2,10 @@
 
 import { useEffect, useState, use } from "react";
 import { useSearchParams } from "next/navigation";
-import { useGetKycHook } from "@/hooks/useGetKycHook";
-import { Button } from "antd";
+import { useGetKycLinkHook } from "@/hooks/useGetKycLinkHook";
+import { Button, Spin, Typography } from "antd";
+
+const { Title, Text } = Typography;
 
 export default function IdentityVerification({
   params,
@@ -16,18 +18,21 @@ export default function IdentityVerification({
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const { data, isLoading, error, refetch } = useGetKycHook({
-    entityId,
-    memberId: memberId || undefined,
-    failureUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/kyc/live-verification?status=failed`,
-    successUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/kyc/live-verification?status=success`,
-  });
+  const { mutate, isPending, data, error } = useGetKycLinkHook();
 
   useEffect(() => {
     if (!entityId) {
       setErrorMessage("Entity ID is required");
+      return;
     }
-  }, [entityId]);
+
+    mutate({
+      entityId,
+      memberId: memberId || undefined,
+      failureUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/kyc/live-verification?status=failed`,
+      successUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/kyc/live-verification?status=success`,
+    });
+  }, [entityId, memberId, mutate]);
 
   useEffect(() => {
     if (error) {
@@ -36,22 +41,26 @@ export default function IdentityVerification({
   }, [error]);
 
   useEffect(() => {
-    console.log("Data:", data);
     if (data?.web_href) {
       window.location.href = data.web_href;
     }
   }, [data]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen gap-6">
-      <h1 className="text-2xl font-bold">KYC Verification</h1>
+    <div className="flex flex-col items-center justify-center min-h-screen p-6 gap-6">
+      <Title level={2}>KYC Verification</Title>
 
       {errorMessage ? (
-        <p className="text-red-500">{errorMessage}</p>
-      ) : isLoading ? (
-        <p className="text-primary">Generating KYC link...</p>
+        <Text type="danger" className="text-center">
+          {errorMessage}
+        </Text>
+      ) : isPending ? (
+        <div className="flex items-center gap-4">
+          <Spin size="large" />
+          <Text type="secondary">Generating KYC link...</Text>
+        </div>
       ) : (
-        <p className="text-green-500">
+        <Text type="success" className="text-center">
           Attempting to generate KYC link for Entity ID: <b>{entityId}</b>
           {memberId && (
             <>
@@ -59,14 +68,20 @@ export default function IdentityVerification({
               and Member ID: <b>{memberId}</b>
             </>
           )}
-        </p>
+        </Text>
       )}
 
       {error && (
         <Button
           type="primary"
-          onClick={() => refetch()}
-          className="mt-4 px-4 py-2 text-white rounded"
+          onClick={() =>
+            mutate({
+              entityId,
+              memberId: memberId || undefined,
+              failureUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/kyc/live-verification?status=failed`,
+              successUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/kyc/live-verification?status=success`,
+            })
+          }
         >
           Retry
         </Button>

@@ -12,22 +12,19 @@ import { KycParams, KycResponse } from "@/types";
 export const fetchKycLink = async (params: KycParams): Promise<KycResponse> => {
   const { entityId, memberId, successUrl, failureUrl } = params;
 
-  const queryString = new URLSearchParams();
-  if (memberId) queryString.append("memberId", memberId);
+  const data = {
+    successUrl,
+    failureUrl,
+  };
 
   try {
-    const response = await axios.get<KycResponse>(
-      `${
-        process.env.NEXT_PUBLIC_COMPLIANCE_API_URL
-      }/entity/${entityId}/kyc?${queryString.toString()}`,
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_COMPLIANCE_API_URL}/entity/${entityId}/kyc`,
+      data, // Pass all parameters in the request body
       {
         headers: {
           "Content-Type": "application/json",
           "x-reap-api-key": process.env.COMPLIANCE_API_KEY as string,
-        },
-        params: {
-          successUrl,
-          failureUrl,
         },
       }
     );
