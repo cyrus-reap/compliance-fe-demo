@@ -3,8 +3,9 @@ export const QUERY_KEYS = {
     "fetchKycLink",
     { entityId, memberId },
   ],
-  FEATURE_REQUIREMENTS: (featureId: string) => [
+  FEATURE_REQUIREMENTS: (featureId?: string) => [
     "featureRequirements",
     featureId,
   ],
+  ENTITIES: (page: number, limit: number) => ["entities", { page, limit }],
 };
