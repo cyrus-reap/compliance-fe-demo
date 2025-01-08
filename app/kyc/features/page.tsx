@@ -1,20 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { useGetEntitiesHook } from "@/hooks/useGetEntitiesHook";
+import { useGetFeaturesHook } from "@/hooks/useGetFeatureHook";
 import { Table, Button, Typography, Spin } from "antd";
-import { GetAllEntitiesForUserType } from "@/types";
 
 const { Title } = Typography;
 
-export default function EntitiesPage() {
+export default function FeaturesPage() {
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
 
-  const { data, isLoading, error, refetch } = useGetEntitiesHook({
-    page,
-    limit,
-  });
+  const { data, isLoading, error, refetch } = useGetFeaturesHook({ page, limit });
 
   const columns = [
     {
@@ -24,30 +20,16 @@ export default function EntitiesPage() {
       align: "center" as const,
     },
     {
-      title: "Business ID",
-      dataIndex: "businessId",
-      key: "businessId",
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
       align: "center" as const,
     },
     {
-      title: "External ID",
-      dataIndex: "externalId",
-      key: "externalId",
+      title: "Slug",
+      dataIndex: "slug",
+      key: "slug",
       align: "center" as const,
-    },
-    {
-      title: "Created At",
-      dataIndex: "createdAt",
-      key: "createdAt",
-      align: "center" as const,
-      render: (date: string) => new Date(date).toLocaleString(),
-    },
-    {
-      title: "Updated At",
-      dataIndex: "updatedAt",
-      key: "updatedAt",
-      align: "center" as const,
-      render: (date: string) => new Date(date).toLocaleString(),
     },
   ];
 
@@ -63,7 +45,7 @@ export default function EntitiesPage() {
     return (
       <div className="text-center mt-8">
         <Title level={4} type="danger">
-          Failed to fetch entities
+          Failed to fetch features
         </Title>
         <Button onClick={() => refetch()} type="primary" className="mt-4">
           Retry
@@ -74,11 +56,11 @@ export default function EntitiesPage() {
 
   return (
     <div className="p-6">
-      <Title level={2}>Entities</Title>
+      <Title level={2}>Features</Title>
       <Table
         dataSource={data?.items || []}
         columns={columns}
-        rowKey={(record: GetAllEntitiesForUserType) => record.id}
+        rowKey={(record: ) => record.id}
         pagination={{
           current: data?.meta.currentPage || 1,
           pageSize: data?.meta.itemsPerPage || 10,

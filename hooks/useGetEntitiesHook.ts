@@ -14,7 +14,7 @@ interface UseEntitiesHookParams {
  * @param {number} limit - The number of items per page.
  * @returns {object} - The query data, loading state, error state, and refetch function.
  */
-export const useEntitiesHook = ({ page, limit }: UseEntitiesHookParams) => {
+export const useGetEntitiesHook = ({ page, limit }: UseEntitiesHookParams) => {
   const query = useQuery({
     queryKey: QUERY_KEYS.ENTITIES(page, limit),
     queryFn: () => fetchEntities(page, limit),

@@ -1,7 +1,7 @@
 "use client";
 
 import { use } from "react";
-import { useFeatureRequirementsHook } from "@/hooks/useFeatureRequirementsHook";
+import { useGetFeatureRequirementsHook } from "@/hooks/useGetFeatureRequirementsHook";
 import { AssociatedEntity, RequirementLevel, ValueType } from "@/types";
 import {
   Button,
@@ -25,7 +25,7 @@ export default function FeatureRequirements({
   const { featureId } = use(params);
 
   const { data, isLoading, error, refetch } =
-    useFeatureRequirementsHook(featureId);
+    useGetFeatureRequirementsHook(featureId);
 
   return (
     <div className="flex flex-col items-center justify-start min-h-screen gap-6 p-6">

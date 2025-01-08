@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useKycHook } from "@/hooks/useKycHook";
+import { useGetKycHook } from "@/hooks/useGetKycHook";
 
 export default function IdentityVerification({
   params,
@@ -12,7 +12,7 @@ export default function IdentityVerification({
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const { data, isLoading, error, refetch } = useKycHook({
+  const { data, isLoading, error, refetch } = useGetKycHook({
     entityId,
     memberId,
   });

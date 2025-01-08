@@ -8,4 +8,5 @@ export const QUERY_KEYS = {
     featureId,
   ],
   ENTITIES: (page: number, limit: number) => ["entities", { page, limit }],
+  FEATURES: (page: number, limit: number) => ["features", { page, limit }],
 };

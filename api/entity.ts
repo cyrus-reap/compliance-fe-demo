@@ -1,4 +1,8 @@
-import { CreateEntityType } from "@/types";
+import {
+  CreateEntityType,
+  GetAllEntitiesForUserType,
+  PaginationType,
+} from "@/types";
 
 /**
  * Creates a new entity.
@@ -29,13 +33,16 @@ export const createEntity = async (data: CreateEntityType): Promise<any> => {
  *
  * @param {number} page - The current page number.
  * @param {number} limit - The number of items per page.
- * @returns {Promise<any>} - The paginated list of entities and metadata.
+ * @returns {Promise<GetAllEntitiesForUserType>} - The paginated list of entities and metadata.
  * @throws {Error} - Throws an error if the API request fails.
  */
 export const fetchEntities = async (
   page: number,
   limit: number
-): Promise<any> => {
+): Promise<{
+  items: GetAllEntitiesForUserType[];
+  meta: PaginationType;
+}> => {
   const queryString = new URLSearchParams();
   queryString.append("page", page.toString());
   queryString.append("limit", limit.toString());

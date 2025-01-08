@@ -12,3 +12,4 @@ export * from "./feature-requirements/feature.requirements";
 export * from "./file-upload/file-upload";
 export * from "./kyc/kyc";
 export * from "./notification/notification";
+export * from "./pagination";
