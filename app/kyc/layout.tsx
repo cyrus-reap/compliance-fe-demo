@@ -5,71 +5,78 @@ import { Button, Layout as AntLayout, Typography } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import { token } from "@/app/theme";
+import { useLayout } from "@/app/layoutContext";
 
 const { Header, Content, Footer } = AntLayout;
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
-interface LayoutProps {
-  title?: string;
-  children: ReactNode;
-  showBackButton?: boolean; // Optionally hide the back button
-}
-
-export default function Layout({
-  title,
-  children,
-  showBackButton = true,
-}: LayoutProps) {
+export default function Layout({ children }: { children: ReactNode }) {
   const router = useRouter();
+  const { options } = useLayout();
 
   return (
     <AntLayout
       style={{
         minHeight: "100vh",
-        background: token.color.grey[200],
+        backgroundColor: token.color.grey[100],
       }}
     >
       <Header
         style={{
-          background: token.color.darkViolet,
-          padding: "0 16px",
-          color: token.color.white,
+          backgroundColor: token.color.darkViolet,
           display: "flex",
           alignItems: "center",
+          padding: "0 24px",
+          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
         }}
       >
-        {showBackButton && (
+        {options.showBackButton && (
           <Button
             type="link"
             onClick={() => router.back()}
             icon={<ArrowLeftOutlined />}
-            style={{ color: token.color.white, marginRight: 16 }}
+            style={{
+              color: token.color.white,
+              fontSize: "16px",
+              fontWeight: "bold",
+              padding: 0,
+            }}
           >
             Back
           </Button>
         )}
-        {title && (
+
+        {options.title && (
           <Title
-            level={4}
+            level={5}
             style={{
               color: token.color.white,
-              margin: 0,
-              lineHeight: "inherit",
+              margin: "0 auto 0 16px",
+              fontSize: "18px",
+              fontWeight: "600",
+              lineHeight: "48px",
+              textAlign: "center",
             }}
           >
-            {title}
+            {options.title}
           </Title>
         )}
       </Header>
-      <Content style={{ padding: "24px 16px", background: token.color.white }}>
-        {children}
-      </Content>
+
+      <Content>{children}</Content>
+
       <Footer
-        style={{ textAlign: "center", background: token.color.grey[300] }}
+        style={{
+          textAlign: "center",
+          backgroundColor: token.color.grey[100],
+          padding: "16px 24px",
+          fontSize: "14px",
+          borderTop: `1px solid ${token.color.grey[300]}`,
+        }}
       >
-        <Typography.Text type="secondary">
-          Reap's Compliance API Demo
-        </Typography.Text>
+        <Text type="secondary">
+          Reap's Compliance API Demo © {new Date().getFullYear()}
+        </Text>
       </Footer>
     </AntLayout>
   );

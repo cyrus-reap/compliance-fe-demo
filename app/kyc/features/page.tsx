@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useGetFeaturesHook } from "@/hooks/useGetFeaturesHook";
 import { Table, Button, Typography, Spin } from "antd";
+import { useRouter } from "next/navigation";
 import { GetAllFeaturesForUserType } from "@/types";
 
 const { Title } = Typography;
@@ -10,6 +11,7 @@ const { Title } = Typography;
 export default function FeaturesPage() {
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
+  const router = useRouter();
 
   const { data, isLoading, error, refetch } = useGetFeaturesHook({
     page,
@@ -36,6 +38,10 @@ export default function FeaturesPage() {
       align: "center" as const,
     },
   ];
+
+  const handleRowClick = (record: GetAllFeaturesForUserType) => {
+    router.push(`/kyc/features/${record.id}`);
+  };
 
   if (isLoading) {
     return (
@@ -73,6 +79,9 @@ export default function FeaturesPage() {
           onChange: (page) => setPage(page),
         }}
         bordered
+        onRow={(record) => ({
+          onClick: () => handleRowClick(record),
+        })}
       />
     </div>
   );

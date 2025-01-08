@@ -12,8 +12,8 @@ export const AntdThemeProvider = ({
     <ConfigProvider
       theme={{
         token: {
-          colorPrimary: token.color.green[600],
-          colorSuccess: token.color.green[400],
+          colorPrimary: token.color.darkViolet,
+          colorSuccess: token.color.green[600],
           colorError: token.color.red[600],
           colorWarning: token.color.orange[600],
           colorText: token.color.grey[800],

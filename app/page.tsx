@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Button, Card, Typography } from "antd";
+import { Button, Card, Typography, Divider } from "antd";
 
 const { Title, Paragraph } = Typography;
 
@@ -13,35 +13,26 @@ export default function Home() {
           KYC Verification System
         </Title>
         <Paragraph className="text-lg text-gray-600 max-w-3xl mx-auto">
-          Simplify compliance and KYC checks with Reap's Compliance API. Explore
-          features, manage entities, or start your KYC verification journey
-          today.
+          This application is built for the purpose of demoing Reap's Compliance
+          API. Simplify compliance and KYC checks with our seamless solution.
+          Explore features, manage entities, or start your KYC verification
+          journey today.
         </Paragraph>
       </header>
 
       <div className="flex flex-col md:flex-row gap-6">
-        <Link href="/identity">
-          <Button type="primary" size="large" className="shadow-lg">
+        <Link href="/kyc">
+          <Button type="primary" size="large" className="shadow-sm">
             Start KYC Verification
           </Button>
         </Link>
         <Link href="/kyc/features">
-          <Button
-            type="primary"
-            size="large"
-            style={{ background: "#52c41a" }}
-            className="shadow-lg"
-          >
+          <Button size="large" className="shadow-sm">
             View Features
           </Button>
         </Link>
         <Link href="/kyc/entities">
-          <Button
-            type="primary"
-            size="large"
-            style={{ background: "#722ed1" }}
-            className="shadow-lg"
-          >
+          <Button size="large" className="shadow-sm">
             View Entities
           </Button>
         </Link>
@@ -108,6 +99,19 @@ export default function Home() {
             </li>
           </ol>
         </div>
+        <Divider />
+        <Paragraph className="text-gray-600 text-center">
+          For detailed documentation and API integration guides, visit{" "}
+          <a
+            href="https://reap-ra.readme.io"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 underline"
+          >
+            reap-ra.readme.io
+          </a>
+          .
+        </Paragraph>
       </Card>
 
       <footer className="mt-12 text-gray-500 text-sm text-center">
