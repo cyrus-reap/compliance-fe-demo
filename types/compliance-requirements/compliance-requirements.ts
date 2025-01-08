@@ -24,12 +24,35 @@ export interface OverallRequirementsStatusType {
   [x: string]: unknown;
 }
 
+export enum AssociatedEntity {
+  INDIVIDUAL = "INDIVIDUAL",
+  BUSINESS = "BUSINESS",
+  DIRECTOR = "DIRECTOR",
+  OWNER = "OWNER",
+  EXECUTIVE = "EXECUTIVE",
+  REPRESENTATIVE = "REPRESENTATIVE",
+}
+
+export enum RequirementLevel {
+  REQUIRED = "REQUIRED",
+  OPTIONAL = "OPTIONAL",
+  PREFERED = "PREFERED",
+}
+
+export enum ValueType {
+  BOOLEAN = "BOOLEAN",
+  NUMERIC = "NUMERIC",
+  STRING = "STRING",
+  FILE = "FILE",
+  JSON = "JSON",
+}
+
 export type RequirementsListType = {
-  associatedEntity: string;
+  associatedEntity: AssociatedEntity;
   requirementId: string;
-  requirementLevel: string;
+  requirementLevel: RequirementLevel;
   requirementSlug: string;
-  valueType: "BOOLEAN" | "NUMERIC" | "STRING" | "FILE" | "JSON";
+  valueType: ValueType;
 }[];
 
 export type RequirementsNeededType = {

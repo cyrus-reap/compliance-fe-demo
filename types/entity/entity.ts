@@ -1,3 +1,8 @@
+export enum EntityType {
+  INDIVIDUAL = "INDIVIDUAL",
+  BUSINESS = "BUSINESS",
+}
+
 export interface CreateEntityResponseType {
   businessId: string;
   externalId: string;
@@ -11,7 +16,7 @@ export interface CreateEntityType {
     requirementSlug: string;
     value: string;
   }[];
-  type: "INDIVIDUAL" | "BUSINESS";
+  type: EntityType;
 }
 
 export interface EnabledFeatureForEntityType {
@@ -51,7 +56,7 @@ export interface GetEntityDetailsType {
     updatedAt: Date;
     value?: any;
   }[];
-  type: "INDIVIDUAL" | "BUSINESS";
+  type: EntityType;
   updatedAt: Date;
   verifiedBy?: string;
 }
