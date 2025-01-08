@@ -17,7 +17,8 @@ export default function IdentityVerification({
 
   const { data, isLoading, error, refetch } = useGetKycHook({
     entityId,
-    memberId: memberId || undefined,
+    memberId: `${process.env.NEXT_PUBLIC_BASE_URL}/kyc/live-verification?status=failed`,
+    successUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/kyc/live-verification?status=success`,
   });
 
   useEffect(() => {
