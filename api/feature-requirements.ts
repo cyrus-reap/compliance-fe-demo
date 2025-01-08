@@ -1,3 +1,5 @@
+"use server";
+
 import axios from "axios";
 import { RequirementsListType } from "@/types";
 
@@ -19,8 +21,7 @@ export const fetchFeatureRequirements = async (
       {
         headers: {
           accept: "application/json",
-          "x-reap-api-key": process.env
-            .NEXT_PUBLIC_COMPLIANCE_API_KEY as string,
+          "x-reap-api-key": process.env.COMPLIANCE_API_KEY as string,
         },
       }
     );

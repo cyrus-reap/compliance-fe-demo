@@ -1,3 +1,5 @@
+"use server";
+
 import axios from "axios";
 import { CreateEntityMemberType } from "@/types";
 
@@ -24,8 +26,7 @@ export const createEntityMember = async ({
       {
         headers: {
           "Content-Type": "application/json",
-          "x-reap-api-key": process.env
-            .NEXT_PUBLIC_COMPLIANCE_API_KEY as string,
+          "x-reap-api-key": process.env.COMPLIANCE_API_KEY as string,
         },
       }
     );
@@ -58,8 +59,7 @@ export const deleteEntityMember = async ({
       `${process.env.NEXT_PUBLIC_COMPLIANCE_API_URL}/entity/${entityId}/member/${memberId}`,
       {
         headers: {
-          "x-reap-api-key": process.env
-            .NEXT_PUBLIC_COMPLIANCE_API_KEY as string,
+          "x-reap-api-key": process.env.COMPLIANCE_API_KEY as string,
         },
       }
     );

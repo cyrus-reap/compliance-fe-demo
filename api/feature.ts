@@ -1,3 +1,5 @@
+"use server";
+
 import axios from "axios";
 import { GetAllFeaturesForUserType, PaginationType } from "@/types";
 
@@ -20,7 +22,7 @@ export const fetchFeatures = async (
     }>(`${process.env.NEXT_PUBLIC_COMPLIANCE_API_URL}/features`, {
       headers: {
         accept: "application/json",
-        "x-reap-api-key": process.env.NEXT_PUBLIC_COMPLIANCE_API_KEY as string,
+        "x-reap-api-key": process.env.COMPLIANCE_API_KEY as string,
       },
       params: {
         page,

@@ -1,3 +1,5 @@
+"use server";
+
 import axios from "axios";
 import {
   CreateEntityType,
@@ -20,8 +22,7 @@ export const createEntity = async (data: CreateEntityType): Promise<any> => {
       {
         headers: {
           "Content-Type": "application/json",
-          "x-reap-api-key": process.env
-            .NEXT_PUBLIC_COMPLIANCE_API_KEY as string,
+          "x-reap-api-key": process.env.COMPLIANCE_API_KEY as string,
         },
       }
     );
@@ -50,8 +51,7 @@ export const fetchEntities = async (
         params: { page, limit },
         headers: {
           accept: "application/json",
-          "x-reap-api-key": process.env
-            .NEXT_PUBLIC_COMPLIANCE_API_KEY as string,
+          "x-reap-api-key": process.env.COMPLIANCE_API_KEY as string,
         },
       }
     );
@@ -76,8 +76,7 @@ export const deleteEntity = async (entityId: string): Promise<any> => {
       `${process.env.NEXT_PUBLIC_COMPLIANCE_API_URL}/entity/${entityId}`,
       {
         headers: {
-          "x-reap-api-key": process.env
-            .NEXT_PUBLIC_COMPLIANCE_API_KEY as string,
+          "x-reap-api-key": process.env.COMPLIANCE_API_KEY as string,
         },
       }
     );

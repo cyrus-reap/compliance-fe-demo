@@ -1,3 +1,5 @@
+"use server";
+
 export const fetchNotifications = async () => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_COMPLIANCE_API_URL}/notification`,
@@ -5,7 +7,7 @@ export const fetchNotifications = async () => {
       method: "GET",
       headers: {
         accept: "application/json",
-        "x-reap-api-key": process.env.NEXT_PUBLIC_COMPLIANCE_API_KEY as string,
+        "x-reap-api-key": process.env.COMPLIANCE_API_KEY as string,
       },
     }
   );
@@ -24,7 +26,7 @@ export const createNotification = async (data: {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-reap-api-key": process.env.NEXT_PUBLIC_COMPLIANCE_API_KEY as string,
+        "x-reap-api-key": process.env.COMPLIANCE_API_KEY as string,
       },
       body: JSON.stringify(data),
     }
