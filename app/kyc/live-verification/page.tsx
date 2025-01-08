@@ -1,7 +1,9 @@
 "use client";
 
+import { Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { Spin } from "antd";
 
 export default function StatusPage() {
   const searchParams = useSearchParams();
@@ -45,15 +47,17 @@ export default function StatusPage() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen gap-6">
-      <h1 className="text-2xl font-bold text-gray-600">Status Unknown</h1>
-      <p>The status of your KYC verification could not be determined.</p>
-      <a
-        href="/identity"
-        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-      >
-        Return to Verification
-      </a>
-    </div>
+    <Suspense fallback={<Spin size="large" />}>
+      <div className="flex flex-col items-center justify-center min-h-screen gap-6">
+        <h1 className="text-2xl font-bold text-gray-600">Status Unknown</h1>
+        <p>The status of your KYC verification could not be determined.</p>
+        <a
+          href="/identity"
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Return to Verification
+        </a>
+      </div>
+    </Suspense>
   );
 }
