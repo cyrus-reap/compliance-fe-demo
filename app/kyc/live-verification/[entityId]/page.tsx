@@ -3,6 +3,7 @@
 import { useEffect, useState, use } from "react";
 import { useSearchParams } from "next/navigation";
 import { useGetKycHook } from "@/hooks/useGetKycHook";
+import { Button } from "antd";
 
 export default function IdentityVerification({
   params,
@@ -17,7 +18,8 @@ export default function IdentityVerification({
 
   const { data, isLoading, error, refetch } = useGetKycHook({
     entityId,
-    memberId: `${process.env.NEXT_PUBLIC_BASE_URL}/kyc/live-verification?status=failed`,
+    memberId: memberId || undefined,
+    failureUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/kyc/live-verification?status=failed`,
     successUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/kyc/live-verification?status=success`,
   });
 
@@ -47,7 +49,7 @@ export default function IdentityVerification({
       {errorMessage ? (
         <p className="text-red-500">{errorMessage}</p>
       ) : isLoading ? (
-        <p className="text-blue-500">Generating KYC link...</p>
+        <p className="text-primary">Generating KYC link...</p>
       ) : (
         <p className="text-green-500">
           Attempting to generate KYC link for Entity ID: <b>{entityId}</b>
@@ -61,12 +63,13 @@ export default function IdentityVerification({
       )}
 
       {error && (
-        <button
+        <Button
+          type="primary"
           onClick={() => refetch()}
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+          className="mt-4 px-4 py-2 text-white rounded"
         >
           Retry
-        </button>
+        </Button>
       )}
     </div>
   );
