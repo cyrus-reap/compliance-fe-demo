@@ -35,7 +35,15 @@ export default function RootLayout({
         <QueryClientProvider client={queryClient}>
           <AntdThemeProvider>
             <LayoutProvider>
-              <Suspense fallback={<Spin size="large" />}>{children}</Suspense>
+              <Suspense
+                fallback={
+                  <div className="flex justify-center items-center min-h-screen bg-white">
+                    <Spin size="large" />
+                  </div>
+                }
+              >
+                {children}
+              </Suspense>
             </LayoutProvider>
           </AntdThemeProvider>
           <ReactQueryDevtools initialIsOpen={false} />
