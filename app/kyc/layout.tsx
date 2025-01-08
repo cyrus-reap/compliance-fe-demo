@@ -75,7 +75,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         }}
       >
         <Text type="secondary">
-          Reap's Compliance API Demo © {new Date().getFullYear()}
+          (REAP) Compliance API Demo © {new Date().getFullYear()}
         </Text>
       </Footer>
     </AntLayout>
