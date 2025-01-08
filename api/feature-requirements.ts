@@ -8,8 +8,10 @@ import { RequirementsListType } from "@/types";
  * @throws {Error} - Throws an error if the API request fails.
  */
 export const fetchFeatureRequirements = async (
-  featureId: string
+  featureId?: string
 ): Promise<{ items: RequirementsListType }> => {
+  if (!featureId) throw new Error("Feature ID is required");
+
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_COMPLIANCE_API_URL}/feature/${featureId}/requirement`,
     {

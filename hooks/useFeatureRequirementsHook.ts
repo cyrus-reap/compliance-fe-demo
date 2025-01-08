@@ -9,7 +9,7 @@ import { QUERY_KEYS } from "@/constants/query-keys";
  * @param {string} featureId - The ID of the feature to fetch requirements for.
  * @returns {object} - The query data, loading state, error state, and refetch function.
  */
-export const useFeatureRequirementsHook = (featureId: string) => {
+export const useFeatureRequirementsHook = (featureId?: string) => {
   const query = useQuery<{ items: RequirementsListType }, Error>({
     queryKey: QUERY_KEYS.FEATURE_REQUIREMENTS(featureId),
     queryFn: () => fetchFeatureRequirements(featureId),

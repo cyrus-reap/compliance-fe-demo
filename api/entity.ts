@@ -17,9 +17,15 @@ export const createEntity = async (data: CreateEntityType) => {
   return response.json();
 };
 
-export const fetchEntities = async () => {
+export const fetchEntities = async (page: number, limit: number) => {
+  const queryString = new URLSearchParams();
+  queryString.append("page", page.toString());
+  queryString.append("limit", limit.toString());
+
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_COMPLIANCE_API_URL}/entity`,
+    `${
+      process.env.NEXT_PUBLIC_COMPLIANCE_API_URL
+    }/entity?${queryString.toString()}`,
     {
       method: "GET",
       headers: {
