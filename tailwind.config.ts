@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import { token } from "./app/theme";
 
 export default {
   content: [
@@ -8,10 +9,7 @@ export default {
   ],
   theme: {
     extend: {
-      colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-      },
+      colors: token.color,
     },
   },
   plugins: [],
