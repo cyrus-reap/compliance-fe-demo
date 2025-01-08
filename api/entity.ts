@@ -1,6 +1,13 @@
 import { CreateEntityType } from "@/types";
 
-export const createEntity = async (data: CreateEntityType) => {
+/**
+ * Creates a new entity.
+ *
+ * @param {CreateEntityType} data - The entity data to be created.
+ * @returns {Promise<any>} - The created entity's response.
+ * @throws {Error} - Throws an error if the API request fails.
+ */
+export const createEntity = async (data: CreateEntityType): Promise<any> => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_COMPLIANCE_API_URL}/entity`,
     {
@@ -17,7 +24,18 @@ export const createEntity = async (data: CreateEntityType) => {
   return response.json();
 };
 
-export const fetchEntities = async (page: number, limit: number) => {
+/**
+ * Fetches a paginated list of entities.
+ *
+ * @param {number} page - The current page number.
+ * @param {number} limit - The number of items per page.
+ * @returns {Promise<any>} - The paginated list of entities and metadata.
+ * @throws {Error} - Throws an error if the API request fails.
+ */
+export const fetchEntities = async (
+  page: number,
+  limit: number
+): Promise<any> => {
   const queryString = new URLSearchParams();
   queryString.append("page", page.toString());
   queryString.append("limit", limit.toString());
@@ -39,7 +57,14 @@ export const fetchEntities = async (page: number, limit: number) => {
   return response.json();
 };
 
-export const deleteEntity = async (entityId: string) => {
+/**
+ * Deletes an entity by its ID.
+ *
+ * @param {string} entityId - The ID of the entity to be deleted.
+ * @returns {Promise<any>} - The response after the entity is deleted.
+ * @throws {Error} - Throws an error if the API request fails.
+ */
+export const deleteEntity = async (entityId: string): Promise<any> => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_COMPLIANCE_API_URL}/entity/${entityId}`,
     {
