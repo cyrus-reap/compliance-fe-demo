@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useState, use, Suspense } from "react";
+import { useEffect, useState, use } from "react";
 import { useSearchParams } from "next/navigation";
 import { useGetKycHook } from "@/hooks/useGetKycHook";
-import { Spin } from "antd";
 
 export default function IdentityVerification({
   params,
@@ -42,35 +41,33 @@ export default function IdentityVerification({
   }, [data]);
 
   return (
-    <Suspense fallback={<Spin size="large" />}>
-      <div className="flex flex-col items-center justify-center min-h-screen gap-6">
-        <h1 className="text-2xl font-bold">KYC Verification</h1>
+    <div className="flex flex-col items-center justify-center min-h-screen gap-6">
+      <h1 className="text-2xl font-bold">KYC Verification</h1>
 
-        {errorMessage ? (
-          <p className="text-red-500">{errorMessage}</p>
-        ) : isLoading ? (
-          <p className="text-blue-500">Generating KYC link...</p>
-        ) : (
-          <p className="text-green-500">
-            Attempting to generate KYC link for Entity ID: <b>{entityId}</b>
-            {memberId && (
-              <>
-                {" "}
-                and Member ID: <b>{memberId}</b>
-              </>
-            )}
-          </p>
-        )}
+      {errorMessage ? (
+        <p className="text-red-500">{errorMessage}</p>
+      ) : isLoading ? (
+        <p className="text-blue-500">Generating KYC link...</p>
+      ) : (
+        <p className="text-green-500">
+          Attempting to generate KYC link for Entity ID: <b>{entityId}</b>
+          {memberId && (
+            <>
+              {" "}
+              and Member ID: <b>{memberId}</b>
+            </>
+          )}
+        </p>
+      )}
 
-        {error && (
-          <button
-            onClick={() => refetch()}
-            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-          >
-            Retry
-          </button>
-        )}
-      </div>
-    </Suspense>
+      {error && (
+        <button
+          onClick={() => refetch()}
+          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+        >
+          Retry
+        </button>
+      )}
+    </div>
   );
 }

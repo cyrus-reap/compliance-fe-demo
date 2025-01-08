@@ -1,10 +1,12 @@
 "use client";
 
+import { Suspense } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { AntdThemeProvider } from "@/components/AntdThemeProvider";
 import { LayoutProvider } from "@/app/layoutContext";
+import { Spin } from "antd";
 import "./globals.css";
 import "antd/dist/reset.css";
 
@@ -32,7 +34,9 @@ export default function RootLayout({
       >
         <QueryClientProvider client={queryClient}>
           <AntdThemeProvider>
-            <LayoutProvider>{children}</LayoutProvider>
+            <LayoutProvider>
+              <Suspense fallback={<Spin size="large" />}>{children}</Suspense>
+            </LayoutProvider>
           </AntdThemeProvider>
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
