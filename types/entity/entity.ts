@@ -30,6 +30,7 @@ export interface GetAllEntitiesForUserType {
   id: string;
   updatedAt: Date;
 }
+[];
 
 export interface GetEntityDetailsType {
   businessId: string;

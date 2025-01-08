@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useGetFeaturesHook } from "@/hooks/useGetFeatureHook";
+import { useGetFeaturesHook } from "@/hooks/useGetFeaturesHook";
 import { Table, Button, Typography, Spin } from "antd";
+import { GetAllFeaturesForUserType } from "@/types";
 
 const { Title } = Typography;
 
@@ -10,7 +11,10 @@ export default function FeaturesPage() {
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
 
-  const { data, isLoading, error, refetch } = useGetFeaturesHook({ page, limit });
+  const { data, isLoading, error, refetch } = useGetFeaturesHook({
+    page,
+    limit,
+  });
 
   const columns = [
     {
@@ -60,7 +64,7 @@ export default function FeaturesPage() {
       <Table
         dataSource={data?.items || []}
         columns={columns}
-        rowKey={(record: ) => record.id}
+        rowKey={(record: GetAllFeaturesForUserType) => record.id}
         pagination={{
           current: data?.meta.currentPage || 1,
           pageSize: data?.meta.itemsPerPage || 10,
