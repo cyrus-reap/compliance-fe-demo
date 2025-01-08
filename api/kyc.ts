@@ -20,7 +20,7 @@ export const fetchKycLink = async (params: KycParams): Promise<KycResponse> => {
   try {
     const response = await axios.post(
       `${process.env.NEXT_PUBLIC_COMPLIANCE_API_URL}/entity/${entityId}/kyc`,
-      data, // Pass all parameters in the request body
+      data,
       {
         headers: {
           "Content-Type": "application/json",
