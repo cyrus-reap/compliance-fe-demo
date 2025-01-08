@@ -21,7 +21,7 @@ export default function Home() {
       </header>
 
       <div className="flex flex-col md:flex-row gap-6">
-        <Link href="/kyc">
+        <Link href="/kyc/entity">
           <Button type="primary" size="large" className="shadow-sm">
             Start KYC Verification
           </Button>
