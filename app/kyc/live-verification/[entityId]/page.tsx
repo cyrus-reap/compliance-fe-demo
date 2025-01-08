@@ -1,27 +1,30 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, use } from "react";
+import { useSearchParams } from "next/navigation";
 import { useGetKycHook } from "@/hooks/useGetKycHook";
 
 export default function IdentityVerification({
   params,
 }: {
-  params: { entityId: string; memberId: string };
+  params: Promise<{ entityId: string }>;
 }) {
-  const { entityId, memberId } = params;
+  const { entityId } = use(params);
+  const searchParams = useSearchParams();
+  const memberId = searchParams.get("memberId");
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const { data, isLoading, error, refetch } = useGetKycHook({
     entityId,
-    memberId,
+    memberId: memberId || undefined,
   });
 
   useEffect(() => {
-    if (!entityId || !memberId) {
-      setErrorMessage("Entity ID and Member ID are required");
+    if (!entityId) {
+      setErrorMessage("Entity ID is required");
     }
-  }, [entityId, memberId]);
+  }, [entityId]);
 
   useEffect(() => {
     if (error) {
@@ -30,6 +33,7 @@ export default function IdentityVerification({
   }, [error]);
 
   useEffect(() => {
+    console.log("Data:", data);
     if (data?.web_href) {
       window.location.href = data.web_href;
     }
@@ -45,8 +49,13 @@ export default function IdentityVerification({
         <p className="text-blue-500">Generating KYC link...</p>
       ) : (
         <p className="text-green-500">
-          Attempting to generate KYC link for Entity ID: <b>{entityId}</b> and
-          Member ID: <b>{memberId}</b>
+          Attempting to generate KYC link for Entity ID: <b>{entityId}</b>
+          {memberId && (
+            <>
+              {" "}
+              and Member ID: <b>{memberId}</b>
+            </>
+          )}
         </p>
       )}
 

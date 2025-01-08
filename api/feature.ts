@@ -1,3 +1,4 @@
+import axios from "axios";
 import { GetAllFeaturesForUserType, PaginationType } from "@/types";
 
 /**
@@ -12,23 +13,25 @@ export const fetchFeatures = async (
   page: number,
   limit: number
 ): Promise<{ items: GetAllFeaturesForUserType[]; meta: PaginationType }> => {
-  const queryString = new URLSearchParams();
-  queryString.append("page", page.toString());
-  queryString.append("limit", limit.toString());
-
-  const response = await fetch(
-    `${
-      process.env.NEXT_PUBLIC_COMPLIANCE_API_URL
-    }/features?${queryString.toString()}`,
-    {
-      method: "GET",
+  try {
+    const response = await axios.get<{
+      items: GetAllFeaturesForUserType[];
+      meta: PaginationType;
+    }>(`${process.env.NEXT_PUBLIC_COMPLIANCE_API_URL}/features`, {
       headers: {
         accept: "application/json",
         "x-reap-api-key": process.env.NEXT_PUBLIC_COMPLIANCE_API_KEY as string,
       },
-    }
-  );
+      params: {
+        page,
+        limit,
+      },
+    });
 
-  if (!response.ok) throw new Error("Failed to fetch features");
-  return response.json();
+    return response.data;
+  } catch (error: any) {
+    throw new Error(
+      error.response?.data?.message || "Failed to fetch features"
+    );
+  }
 };

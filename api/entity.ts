@@ -1,3 +1,4 @@
+import axios from "axios";
 import {
   CreateEntityType,
   GetAllEntitiesForUserType,
@@ -12,20 +13,22 @@ import {
  * @throws {Error} - Throws an error if the API request fails.
  */
 export const createEntity = async (data: CreateEntityType): Promise<any> => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_COMPLIANCE_API_URL}/entity`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-reap-api-key": process.env.NEXT_PUBLIC_COMPLIANCE_API_KEY as string,
-      },
-      body: JSON.stringify(data),
-    }
-  );
-
-  if (!response.ok) throw new Error("Failed to create entity");
-  return response.json();
+  try {
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_COMPLIANCE_API_URL}/entity`,
+      data,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "x-reap-api-key": process.env
+            .NEXT_PUBLIC_COMPLIANCE_API_KEY as string,
+        },
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || "Failed to create entity");
+  }
 };
 
 /**
@@ -33,35 +36,31 @@ export const createEntity = async (data: CreateEntityType): Promise<any> => {
  *
  * @param {number} page - The current page number.
  * @param {number} limit - The number of items per page.
- * @returns {Promise<GetAllEntitiesForUserType>} - The paginated list of entities and metadata.
+ * @returns {Promise<{ items: GetAllEntitiesForUserType[]; meta: PaginationType }>} - The paginated list of entities and metadata.
  * @throws {Error} - Throws an error if the API request fails.
  */
 export const fetchEntities = async (
   page: number,
   limit: number
-): Promise<{
-  items: GetAllEntitiesForUserType[];
-  meta: PaginationType;
-}> => {
-  const queryString = new URLSearchParams();
-  queryString.append("page", page.toString());
-  queryString.append("limit", limit.toString());
-
-  const response = await fetch(
-    `${
-      process.env.NEXT_PUBLIC_COMPLIANCE_API_URL
-    }/entity?${queryString.toString()}`,
-    {
-      method: "GET",
-      headers: {
-        accept: "application/json",
-        "x-reap-api-key": process.env.NEXT_PUBLIC_COMPLIANCE_API_KEY as string,
-      },
-    }
-  );
-
-  if (!response.ok) throw new Error("Failed to fetch entities");
-  return response.json();
+): Promise<{ items: GetAllEntitiesForUserType[]; meta: PaginationType }> => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_COMPLIANCE_API_URL}/entity`,
+      {
+        params: { page, limit },
+        headers: {
+          accept: "application/json",
+          "x-reap-api-key": process.env
+            .NEXT_PUBLIC_COMPLIANCE_API_KEY as string,
+        },
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(
+      error.response?.data?.message || "Failed to fetch entities"
+    );
+  }
 };
 
 /**
@@ -72,16 +71,18 @@ export const fetchEntities = async (
  * @throws {Error} - Throws an error if the API request fails.
  */
 export const deleteEntity = async (entityId: string): Promise<any> => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_COMPLIANCE_API_URL}/entity/${entityId}`,
-    {
-      method: "DELETE",
-      headers: {
-        "x-reap-api-key": process.env.NEXT_PUBLIC_COMPLIANCE_API_KEY as string,
-      },
-    }
-  );
-
-  if (!response.ok) throw new Error("Failed to delete entity");
-  return response.json();
+  try {
+    const response = await axios.delete(
+      `${process.env.NEXT_PUBLIC_COMPLIANCE_API_URL}/entity/${entityId}`,
+      {
+        headers: {
+          "x-reap-api-key": process.env
+            .NEXT_PUBLIC_COMPLIANCE_API_KEY as string,
+        },
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || "Failed to delete entity");
+  }
 };

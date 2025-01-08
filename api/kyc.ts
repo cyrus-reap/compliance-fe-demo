@@ -1,3 +1,4 @@
+import axios from "axios";
 import { KycParams, KycResponse } from "@/types";
 
 /**
@@ -12,24 +13,28 @@ export const fetchKycLink = async (params: KycParams): Promise<KycResponse> => {
   const queryString = new URLSearchParams();
   if (memberId) queryString.append("memberId", memberId);
 
-  const response = await fetch(
-    `${
-      process.env.NEXT_PUBLIC_COMPLIANCE_API_URL
-    }/entity/${entityId}/kyc?${queryString.toString()}`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-reap-api-key": process.env.API_KEY as string,
-      },
-      body: JSON.stringify({ successUrl, failureUrl }),
-    }
-  );
+  try {
+    const response = await axios.get<KycResponse>(
+      `${
+        process.env.NEXT_PUBLIC_COMPLIANCE_API_URL
+      }/entity/${entityId}/kyc?${queryString.toString()}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "x-reap-api-key": process.env
+            .NEXT_PUBLIC_COMPLIANCE_API_KEY as string,
+        },
+        params: {
+          successUrl,
+          failureUrl,
+        },
+      }
+    );
 
-  if (!response.ok) {
-    throw new Error("Failed to fetch KYC link");
+    return response.data;
+  } catch (error: any) {
+    throw new Error(
+      error.response?.data?.message || "Failed to fetch KYC link"
+    );
   }
-
-  const data = await response.json();
-  return data;
 };

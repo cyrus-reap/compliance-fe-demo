@@ -1,14 +1,12 @@
+import axios from "axios";
+import { CreateEntityMemberType } from "@/types";
+
 /**
  * Creates a new member for a specific entity.
  *
  * @param {Object} params - The parameters for creating the entity member.
  * @param {string} params.entityId - The ID of the entity to which the member belongs.
- * @param {Object} params.data - The data for the new member.
- * @param {string} params.data.externalId - The external ID of the member.
- * @param {string} params.data.memberType - The type of the member.
- * @param {Array<Object>} [params.data.requirements] - An optional array of requirements for the member.
- * @param {string} params.data.requirements[].requirementSlug - The slug of the requirement.
- * @param {string} params.data.requirements[].value - The value of the requirement.
+ * @param {CreateEntityMemberType} params.data - The data for creating the entity member.
  * @returns {Promise<any>} - The created entity member's response.
  * @throws {Error} - Throws an error if the API request fails.
  */
@@ -17,26 +15,26 @@ export const createEntityMember = async ({
   data,
 }: {
   entityId: string;
-  data: {
-    externalId: string;
-    memberType: string;
-    requirements?: { requirementSlug: string; value: string }[];
-  };
+  data: CreateEntityMemberType;
 }): Promise<any> => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_COMPLIANCE_API_URL}/entity/${entityId}/member`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-reap-api-key": process.env.NEXT_PUBLIC_COMPLIANCE_API_KEY as string,
-      },
-      body: JSON.stringify(data),
-    }
-  );
-
-  if (!response.ok) throw new Error("Failed to create entity member");
-  return response.json();
+  try {
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_COMPLIANCE_API_URL}/entity/${entityId}/member`,
+      data,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "x-reap-api-key": process.env
+            .NEXT_PUBLIC_COMPLIANCE_API_KEY as string,
+        },
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(
+      error.response?.data?.message || "Failed to create entity member"
+    );
+  }
 };
 
 /**
@@ -55,16 +53,20 @@ export const deleteEntityMember = async ({
   entityId: string;
   memberId: string;
 }): Promise<any> => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_COMPLIANCE_API_URL}/entity/${entityId}/member/${memberId}`,
-    {
-      method: "DELETE",
-      headers: {
-        "x-reap-api-key": process.env.NEXT_PUBLIC_COMPLIANCE_API_KEY as string,
-      },
-    }
-  );
-
-  if (!response.ok) throw new Error("Failed to delete entity member");
-  return response.json();
+  try {
+    const response = await axios.delete(
+      `${process.env.NEXT_PUBLIC_COMPLIANCE_API_URL}/entity/${entityId}/member/${memberId}`,
+      {
+        headers: {
+          "x-reap-api-key": process.env
+            .NEXT_PUBLIC_COMPLIANCE_API_KEY as string,
+        },
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(
+      error.response?.data?.message || "Failed to delete entity member"
+    );
+  }
 };

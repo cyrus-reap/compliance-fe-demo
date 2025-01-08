@@ -7,7 +7,7 @@ export const useGetKycHook = (params: KycParams) => {
   const query = useQuery<KycResponse, Error>({
     queryKey: QUERY_KEYS.FETCH_KYC_LINK(params.entityId, params.memberId),
     queryFn: () => fetchKycLink(params),
-    enabled: !!params.entityId && !!params.memberId,
+    enabled: !!params.entityId,
   });
 
   const { isLoading, data, error, refetch } = query;
