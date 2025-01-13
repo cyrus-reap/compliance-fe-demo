@@ -5,6 +5,7 @@ import {
   CreateEntityType,
   GetAllEntitiesForUserType,
   PaginationType,
+  GetEntityDetailsType,
 } from "@/types";
 
 /**
@@ -83,5 +84,32 @@ export const deleteEntity = async (entityId: string): Promise<any> => {
     return response.data;
   } catch (error: any) {
     throw new Error(error.response?.data?.message || "Failed to delete entity");
+  }
+};
+
+/**
+ * Fetch entity details from the API.
+ *
+ * @param entityId - ID of the entity.
+ * @returns EntityDetails
+ */
+export const getEntityDetails = async (
+  entityId: string
+): Promise<GetEntityDetailsType> => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_COMPLIANCE_API_URL}/entity/${entityId}`,
+      {
+        headers: {
+          "x-reap-api-key": process.env.COMPLIANCE_API_KEY as string,
+        },
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error("Error fetching entity details:", error.message);
+    throw new Error(
+      error.response?.data?.message || "Failed to fetch entity details"
+    );
   }
 };

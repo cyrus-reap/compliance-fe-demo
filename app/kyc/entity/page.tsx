@@ -1,16 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { usePostEntityHook } from "@/hooks/usePostEntityHook";
 import { useRouter } from "next/navigation";
-import { Button, Input, Spin, Typography, Alert, Select, Divider } from "antd";
+import { Button, Input, Spin, Typography, Alert, Divider } from "antd";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import { CreateEntityType, EntityType } from "@/types";
-import nationality from "i18n-nationality";
 import * as Yup from "yup";
+import NationalitySelector from "@/components/NationalitySelector";
 
 const { Title } = Typography;
-const { Option } = Select;
 
 const validationSchema = Yup.object({
   type: Yup.string()
@@ -23,21 +21,12 @@ const validationSchema = Yup.object({
         value: Yup.string().required("Requirement value is required"),
       })
     )
-    .min(2, "All two requirements must be filled")
     .required("Requirements are required"),
 });
 
 export default function CreateEntityPage() {
   const router = useRouter();
   const { mutate, isPending, isError, isSuccess, error } = usePostEntityHook();
-
-  const [nationalityOptions, setNationalityOptions] = useState<string[]>([]);
-
-  useEffect(() => {
-    nationality.registerLocale(require("i18n-nationality/langs/en.json"));
-    const nationalities = nationality.getNames("en");
-    setNationalityOptions(Object.values(nationalities));
-  }, []);
 
   const initialValues: CreateEntityType = {
     externalId: Math.random().toString(36).substring(2, 15),
@@ -52,7 +41,7 @@ export default function CreateEntityPage() {
     mutate(values, {
       onSuccess: (data) => {
         const { id: entityId } = data;
-        router.push(`/kyc/live-verification/${entityId}`);
+        router.push(`/kyc/proof-of-address/${entityId}`);
       },
     });
   };
@@ -125,26 +114,12 @@ export default function CreateEntityPage() {
                     </label>
 
                     {requirement.requirementSlug === "nationality" ? (
-                      <Select
-                        className="w-full"
-                        showSearch
-                        placeholder="Select nationality"
+                      <NationalitySelector
                         value={requirement.value}
                         onChange={(value: string) =>
                           setFieldValue(`requirements.${index}.value`, value)
                         }
-                        filterOption={(input, option) =>
-                          (option?.children as any)
-                            .toLowerCase()
-                            .includes(input.toLowerCase())
-                        }
-                      >
-                        {nationalityOptions.map((country, i) => (
-                          <Option key={i} value={country}>
-                            {country}
-                          </Option>
-                        ))}
-                      </Select>
+                      />
                     ) : (
                       <Field
                         name={`requirements.${index}.value`}

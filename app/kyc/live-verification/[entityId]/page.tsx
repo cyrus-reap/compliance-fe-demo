@@ -29,8 +29,8 @@ export default function IdentityVerification({
     mutate({
       entityId,
       memberId: memberId || undefined,
-      failureUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/kyc/live-verification?status=failed`,
-      successUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/kyc/live-verification?status=success`,
+      failureUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/kyc/live-verification?status=failed&entityId=${entityId}`,
+      successUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/kyc/live-verification?status=success&entityId=${entityId}`,
     });
   }, [entityId, memberId, mutate]);
 
