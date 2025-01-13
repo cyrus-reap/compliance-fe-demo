@@ -17,9 +17,17 @@ export const fetchKycLink = async (params: KycParams): Promise<KycResponse> => {
     failureUrl,
   };
 
+  console.log(
+    "KYC link request data:",
+    `${
+      process.env.NEXT_PUBLIC_COMPLIANCE_API_URL
+    }/entity/${entityId}/kyc?memberId=${memberId || ""}`
+  );
   try {
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_COMPLIANCE_API_URL}/entity/${entityId}/kyc?memberId=${memberId}`,
+      `${
+        process.env.NEXT_PUBLIC_COMPLIANCE_API_URL
+      }/entity/${entityId}/kyc?memberId=${memberId || ""}`,
       data,
       {
         headers: {
@@ -28,6 +36,8 @@ export const fetchKycLink = async (params: KycParams): Promise<KycResponse> => {
         },
       }
     );
+
+    console.log("KYC link response:", response);
 
     return response.data;
   } catch (error: any) {

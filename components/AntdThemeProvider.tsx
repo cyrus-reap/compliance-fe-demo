@@ -1,4 +1,4 @@
-import { ConfigProvider, theme } from "antd";
+import { ConfigProvider } from "antd";
 import { token } from "@/app/theme";
 
 export const AntdThemeProvider = ({
@@ -6,8 +6,6 @@ export const AntdThemeProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const { defaultAlgorithm, darkAlgorithm } = theme;
-
   return (
     <ConfigProvider
       theme={{

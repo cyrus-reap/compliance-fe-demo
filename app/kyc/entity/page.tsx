@@ -2,7 +2,8 @@
 
 import { usePostEntityHook } from "@/hooks/usePostEntityHook";
 import { useRouter } from "next/navigation";
-import { Button, Input, Spin, Typography, Alert, Divider } from "antd";
+import { Button, Input, Spin, Typography, Alert, Divider, Tooltip } from "antd";
+import { InfoCircleOutlined } from "@ant-design/icons";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import { CreateEntityType, EntityType } from "@/types";
 import * as Yup from "yup";
@@ -46,6 +47,11 @@ export default function CreateEntityPage() {
     });
   };
 
+  const requirementTooltips: Record<string, string> = {
+    "individual-entity-name": "The full name of the individual entity.",
+    nationality: "The nationality of the individual.",
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-6">
       <Title level={2}>Create Entity</Title>
@@ -83,13 +89,11 @@ export default function CreateEntityPage() {
               >
                 Individual
               </Button>
-              <Button
-                type={values.type === "BUSINESS" ? "primary" : "default"}
-                onClick={() => setFieldValue("type", "BUSINESS")}
-                className="w-full"
-              >
-                Business
-              </Button>
+              <Tooltip title="Business option is currently unavailable">
+                <Button type="default" disabled className="w-full">
+                  Business
+                </Button>
+              </Tooltip>
               {touched.type && errors.type && (
                 <div className="text-red-500 text-sm mt-1">{errors.type}</div>
               )}
@@ -103,7 +107,7 @@ export default function CreateEntityPage() {
               </Title>
               {values.requirements.map((requirement: any, index: number) => (
                 <div key={index} className="mb-8 rounded">
-                  <div>
+                  <div className="flex items-center gap-2">
                     <label
                       htmlFor={`requirements.${index}.value`}
                       className="block font-medium mb-1"
@@ -112,35 +116,43 @@ export default function CreateEntityPage() {
                         .replace(/-/g, " ")
                         .toUpperCase()}
                     </label>
-
-                    {requirement.requirementSlug === "nationality" ? (
-                      <NationalitySelector
-                        value={requirement.value}
-                        onChange={(value: string) =>
-                          setFieldValue(`requirements.${index}.value`, value)
-                        }
-                      />
-                    ) : (
-                      <Field
-                        name={`requirements.${index}.value`}
-                        as={Input}
-                        placeholder={`Enter value for ${requirement.requirementSlug
-                          .replace(/-/g, " ")
-                          .toUpperCase()}`}
-                        className={
-                          touched.requirements?.[index]?.value &&
-                          errors.requirements?.[index]?.value
-                            ? "border-red-500"
-                            : ""
-                        }
-                      />
-                    )}
-                    <ErrorMessage
-                      name={`requirements.${index}.value`}
-                      component="div"
-                      className="text-red-500 text-sm mt-1"
-                    />
+                    <Tooltip
+                      title={
+                        requirementTooltips[requirement.requirementSlug] ||
+                        "No information available"
+                      }
+                    >
+                      <InfoCircleOutlined className="text-gray-500" />
+                    </Tooltip>
                   </div>
+
+                  {requirement.requirementSlug === "nationality" ? (
+                    <NationalitySelector
+                      value={requirement.value}
+                      onChange={(value: string) =>
+                        setFieldValue(`requirements.${index}.value`, value)
+                      }
+                    />
+                  ) : (
+                    <Field
+                      name={`requirements.${index}.value`}
+                      as={Input}
+                      placeholder={`Enter value for ${requirement.requirementSlug
+                        .replace(/-/g, " ")
+                        .toUpperCase()}`}
+                      className={
+                        touched.requirements?.[index]?.value &&
+                        errors.requirements?.[index]?.value
+                          ? "border-red-500"
+                          : ""
+                      }
+                    />
+                  )}
+                  <ErrorMessage
+                    name={`requirements.${index}.value`}
+                    component="div"
+                    className="text-red-500 text-sm mt-1"
+                  />
                 </div>
               ))}
             </div>
