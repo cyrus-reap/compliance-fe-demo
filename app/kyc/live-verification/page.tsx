@@ -1,14 +1,13 @@
 "use client";
 
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useGetEntityDetailsHook } from "@/hooks/useGetEntityDetailsHook";
-import { Alert, Spin, Typography, Card, Button } from "antd";
+import { Alert, Spin, Typography, Button } from "antd";
 import RequirementCard from "@/components/RequirementCard";
 import { GetEntityDetailsType } from "@/types";
 import _ from "lodash";
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 export default function StatusPage() {
   const searchParams = useSearchParams();

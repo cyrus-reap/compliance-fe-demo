@@ -4,17 +4,23 @@ import { useState } from "react";
 import { useGetEntitiesHook } from "@/hooks/useGetEntitiesHook";
 import { Table, Button, Typography, Spin } from "antd";
 import { GetAllEntitiesForUserType } from "@/types";
+import { useRouter } from "next/navigation";
 
 const { Title } = Typography;
 
 export default function EntitiesPage() {
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
+  const router = useRouter();
 
   const { data, isLoading, error, refetch } = useGetEntitiesHook({
     page,
     limit,
   });
+
+  const handleView = (record: GetAllEntitiesForUserType) => {
+    router.push(`/kyc/entities/${record.id}`);
+  };
 
   const columns = [
     {
@@ -48,6 +54,30 @@ export default function EntitiesPage() {
       key: "updatedAt",
       align: "center" as const,
       render: (date: string) => new Date(date).toLocaleString(),
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      align: "center" as const,
+      render: (_: any, record: GetAllEntitiesForUserType) => (
+        <div className="flex gap-2 justify-center">
+          <Button
+            type="primary"
+            size="small"
+            onClick={() => handleView(record)}
+          >
+            View
+          </Button>
+
+          <Button type="default" size="small" disabled>
+            Edit
+          </Button>
+
+          <Button type="default" size="small" danger disabled>
+            Delete
+          </Button>
+        </div>
+      ),
     },
   ];
 

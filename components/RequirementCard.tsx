@@ -30,15 +30,10 @@ const RequirementCard: React.FC<RequirementCardProps> = ({
 
   const badgeColor = statusColors[status.toUpperCase()] || "default";
 
-  return (
-    <Card bordered className="mb-4 w-full shadow-sm hover:shadow-md">
-      <div className="flex justify-between items-center">
-        <Text strong className="block">
-          {name || "Unknown Requirement"}
-        </Text>
-        <Badge color={badgeColor} text={status || "Unknown Status"} />
-      </div>
-      {isFile && fileUrl ? (
+  // Render the value based on its type
+  const renderValue = () => {
+    if (isFile && fileUrl) {
+      return (
         <div className="text-gray-600 mt-4 flex items-center gap-4">
           <Image
             src={fileUrl}
@@ -59,12 +54,41 @@ const RequirementCard: React.FC<RequirementCardProps> = ({
             Download File
           </Button>
         </div>
-      ) : (
+      );
+    }
+
+    if (value && typeof value === "object") {
+      return (
         <div className="text-gray-600 mt-4">
-          <Text>Value: </Text>
-          <Text>{value || "No Value"}</Text>
+          <Text>Details:</Text>
+          <ul className="list-disc ml-6 mt-2">
+            {Object.entries(value).map(([key, val]) => (
+              <li key={key}>
+                <Text strong>{key}:</Text> <Text>{JSON.stringify(val)}</Text>
+              </li>
+            ))}
+          </ul>
         </div>
-      )}
+      );
+    }
+
+    return (
+      <div className="text-gray-600 mt-4">
+        <Text>Value: </Text>
+        <Text>{value || "No Value"}</Text>
+      </div>
+    );
+  };
+
+  return (
+    <Card bordered className="mb-4 w-full shadow-sm hover:shadow-md">
+      <div className="flex justify-between items-center">
+        <Text strong className="block">
+          {name || "Unknown Requirement"}
+        </Text>
+        <Badge color={badgeColor} text={status || "Unknown Status"} />
+      </div>
+      {renderValue()}
     </Card>
   );
 };

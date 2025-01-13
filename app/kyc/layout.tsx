@@ -2,7 +2,7 @@
 
 import { ReactNode } from "react";
 import { Button, Layout as AntLayout, Typography } from "antd";
-import { ArrowLeftOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, HomeOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import { token } from "@/app/theme";
 import { useLayout } from "@/app/layoutContext";
@@ -61,6 +61,21 @@ export default function Layout({ children }: { children: ReactNode }) {
             {options.title}
           </Title>
         )}
+
+        <Button
+          type="link"
+          onClick={() => router.push("/")}
+          icon={<HomeOutlined />}
+          style={{
+            color: token.color.white,
+            fontSize: "16px",
+            fontWeight: "bold",
+            marginLeft: "auto",
+            padding: 0,
+          }}
+        >
+          Home
+        </Button>
       </Header>
 
       <Content>{children}</Content>
