@@ -60,7 +60,6 @@ export default function EntityDetailsPage({
 
   const renderRequirements = () => {
     return submittedRequirements.map((req) => {
-      console.log(req);
       if (!req) return null;
 
       return (

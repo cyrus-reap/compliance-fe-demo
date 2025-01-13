@@ -31,8 +31,6 @@ const FileUploadComponent = ({
           try {
             const formData = new FormData();
 
-            console.log("data", data);
-
             // Add all fields from the presigned POST response
             for (const [key, value] of Object.entries(data.fields)) {
               formData.append(key, value);

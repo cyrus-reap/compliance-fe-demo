@@ -27,8 +27,6 @@ export const getPresignedPostFileUrl = async (
 ): Promise<PresignedPostResponse> => {
   const { entityId, requirementSlug, memberId } = params;
 
-  console.log("PARAMS", params);
-
   try {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_COMPLIANCE_API_URL}/entity/${entityId}/requirement-slug/${requirementSlug}/presigned-upload-url`,
