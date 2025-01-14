@@ -7,6 +7,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { AntdThemeProvider } from "@/components/AntdThemeProvider";
 import { LayoutProvider } from "@/app/layoutContext";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Spin } from "antd";
 import "./globals.css";
 import "antd/dist/reset.css";
@@ -50,6 +51,7 @@ export default function RootLayout({
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
