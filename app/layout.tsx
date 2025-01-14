@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { AntdThemeProvider } from "@/components/AntdThemeProvider";
 import { LayoutProvider } from "@/app/layoutContext";
+import { Analytics } from "@vercel/analytics/react";
 import { Spin } from "antd";
 import "./globals.css";
 import "antd/dist/reset.css";
@@ -48,6 +49,7 @@ export default function RootLayout({
           </AntdThemeProvider>
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
+        <Analytics />
       </body>
     </html>
   );
