@@ -2,7 +2,7 @@
 
 import { usePostEntityHook } from "@/hooks/usePostEntityHook";
 import { useRouter } from "next/navigation";
-import { Button, Input, Spin, Typography, Alert, Divider, Tooltip } from "antd";
+import { Button, Input, Typography, Alert, Divider, Tooltip } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import { CreateEntityType, EntityType } from "@/types";
@@ -164,7 +164,7 @@ export default function CreateEntityPage() {
               loading={isPending}
               disabled={isPending}
             >
-              {isPending ? <Spin /> : "Create Entity"}
+              {isPending ? "" : "Create Entity"}
             </Button>
           </Form>
         )}
