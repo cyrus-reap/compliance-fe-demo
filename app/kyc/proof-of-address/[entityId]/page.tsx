@@ -1,5 +1,6 @@
 "use client";
 
+import { use } from "react";
 import { useRouter } from "next/navigation";
 import { Typography } from "antd";
 import DirectFileUploadComponent from "@/components/DirectFileUploadComponent";
@@ -9,10 +10,10 @@ const { Title } = Typography;
 export default function ProofOfAddressPage({
   params,
 }: {
-  params: { entityId: string };
+  params: Promise<{ entityId: string }>;
 }) {
   const router = useRouter();
-  const { entityId } = params;
+  const { entityId } = use(params);
 
   const handleUploadSuccess = () => {
     router.push(`/kyc/live-verification/${entityId}`);
