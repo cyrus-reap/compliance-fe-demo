@@ -8,6 +8,7 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 import { CreateEntityType, EntityType } from "@/types";
 import * as Yup from "yup";
 import NationalitySelector from "@/components/NationalitySelector";
+import PhoneNumberInput from "@/components/PhoneNumberInput";
 
 const { Title } = Typography;
 
@@ -19,7 +20,7 @@ const validationSchema = Yup.object({
     .of(
       Yup.object({
         requirementSlug: Yup.string().required("Requirement slug is required"),
-        value: Yup.string().required("Requirement value is required"),
+        value: Yup.mixed().required("Requirement value is required"),
       })
     )
     .required("Requirements are required"),
@@ -34,6 +35,10 @@ export default function CreateEntityPage() {
     requirements: [
       { requirementSlug: "individual-entity-name", value: "" },
       { requirementSlug: "nationality", value: "" },
+      {
+        requirementSlug: "phone-number",
+        value: "",
+      },
     ],
     type: EntityType.INDIVIDUAL,
   };
@@ -50,6 +55,7 @@ export default function CreateEntityPage() {
   const requirementTooltips: Record<string, string> = {
     "individual-entity-name": "The full name of the individual entity.",
     nationality: "The nationality of the individual.",
+    "phone-number": "The phone number including country code.",
   };
 
   return (
@@ -130,6 +136,13 @@ export default function CreateEntityPage() {
                     <NationalitySelector
                       value={requirement.value}
                       onChange={(value: string) =>
+                        setFieldValue(`requirements.${index}.value`, value)
+                      }
+                    />
+                  ) : requirement.requirementSlug === "phone-number" ? (
+                    <PhoneNumberInput
+                      value={requirement.value}
+                      onChange={(value) =>
                         setFieldValue(`requirements.${index}.value`, value)
                       }
                     />
