@@ -5,7 +5,7 @@ import { Button, Layout as AntLayout, Typography, Spin } from "antd";
 import { ArrowLeftOutlined, HomeOutlined } from "@ant-design/icons";
 import { useRouter, usePathname } from "next/navigation";
 import Lottie from "react-lottie";
-import animationData from "@/public/kyc-loader.json"; // Replace with your Lottie file
+import animationData from "@/public/kyc-loader.json";
 import { token } from "@/app/theme";
 import { useLayout } from "@/app/layoutContext";
 
@@ -42,6 +42,11 @@ export default function Layout({ children }: { children: ReactNode }) {
     },
   };
 
+  const LottieLoader = () => {
+    if (typeof window === "undefined") return null;
+    return <Lottie options={loaderOptions} height={150} width={150} />;
+  };
+
   return (
     <Suspense fallback={<Spin size="large" />}>
       <AntLayout
@@ -50,7 +55,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       >
         {isLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-gray-100 z-50">
-            <Lottie options={loaderOptions} height={150} width={150} />
+            <LottieLoader />
           </div>
         )}
 
