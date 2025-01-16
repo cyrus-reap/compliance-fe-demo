@@ -3,7 +3,7 @@
 import { ReactNode, useState, useEffect, Suspense } from "react";
 import { Button, Layout as AntLayout, Typography, Spin } from "antd";
 import { ArrowLeftOutlined, HomeOutlined } from "@ant-design/icons";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Lottie from "react-lottie";
 import animationData from "@/public/kyc-loader.json";
 import { token } from "@/app/theme";
@@ -14,7 +14,7 @@ const { Title, Text } = Typography;
 
 export default function Layout({ children }: { children: ReactNode }) {
   const router = useRouter();
-  const pathname = usePathname();
+
   const { options } = useLayout();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -31,7 +31,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     return () => {
       clearTimeout(timeout);
     };
-  }, [pathname]);
+  }, []);
 
   const loaderOptions = {
     loop: true,
