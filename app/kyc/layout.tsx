@@ -1,19 +1,19 @@
-import dynamic from "next/dynamic";
+"use client";
+
 import { ReactNode, useState, useEffect, Suspense } from "react";
 import { Button, Layout as AntLayout, Typography, Spin } from "antd";
 import { ArrowLeftOutlined, HomeOutlined } from "@ant-design/icons";
-import { useRouter } from "next/navigation";
-import animationData from "@/public/kyc-loader.json";
+import { useRouter, usePathname } from "next/navigation";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { token } from "@/app/theme";
 import { useLayout } from "@/app/layoutContext";
 
 const { Header, Content, Footer } = AntLayout;
 const { Title, Text } = Typography;
 
-const Lottie = dynamic(() => import("react-lottie"), { ssr: false });
-
 export default function Layout({ children }: { children: ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
   const { options } = useLayout();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -30,16 +30,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     return () => {
       clearTimeout(timeout);
     };
-  }, []);
-
-  const loaderOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: animationData,
-    rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
-    },
-  };
+  }, [pathname]);
 
   return (
     <Suspense fallback={<Spin size="large" />}>
@@ -48,8 +39,13 @@ export default function Layout({ children }: { children: ReactNode }) {
         style={{ backgroundColor: token.color.grey[100] }}
       >
         {isLoading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-100 z-50">
-            <Lottie options={loaderOptions} height={150} width={150} />
+          <div className="absolute inset-0 flex items-center justify-center z-50 w-1/2 mx-auto">
+            <DotLottieReact
+              src="/kyc-loader.lottie"
+              loop
+              autoplay
+              style={{ width: "200px" }}
+            />
           </div>
         )}
 
