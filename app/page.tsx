@@ -1,14 +1,44 @@
 "use client";
 
 import Link from "next/link";
-import { Button, Card, Typography, Divider } from "antd";
+import { Button, Card, Typography, Divider, Carousel } from "antd";
 
 const { Title, Paragraph } = Typography;
 
 export default function Home() {
+  const carouselContent = [
+    {
+      title: "API Key Generation",
+      description: "Obtain an API key to access Reap's KYC service.",
+    },
+    {
+      title: "Access Requirements",
+      description: `Use the "Get Feature Requirements API" to fetch requirements for retail users.`,
+    },
+    {
+      title: "Create Entity",
+      description: `Create an entity of type "INDIVIDUAL" representing the user.`,
+    },
+    {
+      title: "Submit Information",
+      description:
+        "Submit user details like Photo ID, PEP/Sanction Screening, and Proof of Residential Address.",
+    },
+    {
+      title: "Review",
+      description:
+        'Verify submitted information and ensure all fields are marked as "APPROVED".',
+    },
+    {
+      title: "Qualification",
+      description:
+        'Once all checks are completed, the individual is considered "qualified."',
+    },
+  ];
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
-      <header className="text-center mb-12">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-6">
+      <header className="text-center mb-2 mt-12">
         <Title level={1} className="mb-4">
           KYC Verification System
         </Title>
@@ -20,7 +50,7 @@ export default function Home() {
         </Paragraph>
       </header>
 
-      <div className="flex flex-col md:flex-row gap-6">
+      <div className="flex flex-col md:flex-row gap-6 mb-12">
         <Link href="/kyc/entity">
           <Button type="primary" size="large" className="shadow-sm">
             Start KYC Verification
@@ -39,7 +69,7 @@ export default function Home() {
       </div>
 
       <Card
-        className="mt-16 shadow-lg max-w-5xl w-full"
+        className="shadow-lg max-w-5xl w-full"
         bordered={false}
         style={{ background: "#fff", borderRadius: "8px" }}
       >
@@ -62,43 +92,27 @@ export default function Home() {
           </ul>
         </div>
 
-        <div>
+        <div className="mb-8">
           <Title level={3} className="text-lg">
             Steps to Complete KYC:
           </Title>
-          <ol className="list-decimal list-inside text-gray-700 pl-4 space-y-2">
-            <li>
-              <strong>API Key Generation:</strong> Obtain an API key to access
-              Reap's KYC service.
-            </li>
-            <li>
-              <strong>Access Requirements:</strong> Use the{" "}
-              <code className="bg-gray-100 px-1 rounded">
-                Get Feature Requirements API
-              </code>{" "}
-              to fetch requirements for retail users.
-            </li>
-            <li>
-              <strong>Create Entity:</strong> Create an entity of type{" "}
-              <code className="bg-gray-100 px-1 rounded">INDIVIDUAL</code>{" "}
-              representing the user.
-            </li>
-            <li>
-              <strong>Submit Information:</strong> Submit user details like
-              Photo ID, PEP/Sanction Screening, and Proof of Residential
-              Address.
-            </li>
-            <li>
-              <strong>Review:</strong> Verify submitted information and ensure
-              all fields are marked as{" "}
-              <code className="bg-gray-100 px-1 rounded">APPROVED</code>.
-            </li>
-            <li>
-              <strong>Qualification:</strong> Once all checks are completed, the
-              individual is considered "qualified."
-            </li>
-          </ol>
+          <Carousel
+            autoplay
+            dotPosition="bottom"
+            className="rounded-lg overflow-hidden shadow-md"
+            dots={{ className: "text" }}
+          >
+            {carouselContent.map((step, index) => (
+              <div key={index} className="p-6">
+                <Title level={4} className="mb-2">
+                  {`${index + 1}. ${step.title}`}
+                </Title>
+                <Paragraph>{step.description}</Paragraph>
+              </div>
+            ))}
+          </Carousel>
         </div>
+
         <Divider />
         <Paragraph className="text-gray-600 text-center">
           For detailed documentation and API integration guides, visit{" "}

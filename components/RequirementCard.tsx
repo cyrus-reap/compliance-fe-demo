@@ -20,7 +20,6 @@ const RequirementCard: React.FC<RequirementCardProps> = ({
   const isFile = valueType === "FILE";
   const fileUrl = value?.presignedUrl;
 
-  // Map status to badge colors
   const statusColors: Record<string, string> = {
     PENDING: "orange",
     APPROVED: "green",
@@ -30,7 +29,6 @@ const RequirementCard: React.FC<RequirementCardProps> = ({
 
   const badgeColor = statusColors[status.toUpperCase()] || "default";
 
-  // Render the value based on its type
   const renderValue = () => {
     if (isFile && fileUrl) {
       return (

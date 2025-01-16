@@ -1,9 +1,11 @@
 "use client";
 
-import { ReactNode } from "react";
-import { Button, Layout as AntLayout, Typography } from "antd";
+import { ReactNode, useState, useEffect } from "react";
+import { Button, Layout as AntLayout, Typography, Spin } from "antd";
 import { ArrowLeftOutlined, HomeOutlined } from "@ant-design/icons";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
+import Lottie from "react-lottie";
+import animationData from "@/public/kyc-loader.json"; // Replace with your Lottie file
 import { token } from "@/app/theme";
 import { useLayout } from "@/app/layoutContext";
 
@@ -12,22 +14,49 @@ const { Title, Text } = Typography;
 
 export default function Layout({ children }: { children: ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
   const { options } = useLayout();
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+
+    const handleRouteChange = () => {
+      setIsLoading(true);
+      timeout = setTimeout(() => setIsLoading(false), 700);
+    };
+
+    handleRouteChange();
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [pathname]);
+
+  const loaderOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationData,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
 
   return (
     <AntLayout
-      style={{
-        minHeight: "100vh",
-        backgroundColor: token.color.grey[100],
-      }}
+      className="min-h-screen relative"
+      style={{ backgroundColor: token.color.grey[100] }}
     >
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75 z-50">
+          <Lottie options={loaderOptions} height={150} width={150} />
+        </div>
+      )}
+
       <Header
+        className="flex items-center px-6 shadow-md"
         style={{
           backgroundColor: token.color.darkViolet,
-          display: "flex",
-          alignItems: "center",
-          padding: "0 24px",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
         }}
       >
         {options.showBackButton && (
@@ -49,13 +78,9 @@ export default function Layout({ children }: { children: ReactNode }) {
         {options.title && (
           <Title
             level={5}
+            className="mx-auto ml-4 text-lg font-semibold leading-[48px] text-center"
             style={{
               color: token.color.white,
-              margin: "0 auto 0 16px",
-              fontSize: "18px",
-              fontWeight: "600",
-              lineHeight: "48px",
-              textAlign: "center",
             }}
           >
             {options.title}
@@ -70,22 +95,20 @@ export default function Layout({ children }: { children: ReactNode }) {
             color: token.color.white,
             fontSize: "16px",
             fontWeight: "bold",
-            marginLeft: "auto",
             padding: 0,
           }}
+          className="ml-auto"
         >
           Home
         </Button>
       </Header>
 
-      <Content>{children}</Content>
+      <Content className="p-6">{!isLoading && children}</Content>
 
       <Footer
+        className="text-center p-4 text-sm border-t"
         style={{
-          textAlign: "center",
           backgroundColor: token.color.grey[100],
-          padding: "16px 24px",
-          fontSize: "14px",
           borderTop: `1px solid ${token.color.grey[300]}`,
         }}
       >
