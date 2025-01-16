@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useState, useEffect } from "react";
+import { ReactNode, useState, useEffect, Suspense } from "react";
 import { Button, Layout as AntLayout, Typography, Spin } from "antd";
 import { ArrowLeftOutlined, HomeOutlined } from "@ant-design/icons";
 import { useRouter, usePathname } from "next/navigation";
@@ -43,79 +43,81 @@ export default function Layout({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AntLayout
-      className="min-h-screen relative"
-      style={{ backgroundColor: token.color.grey[100] }}
-    >
-      {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75 z-50">
-          <Lottie options={loaderOptions} height={150} width={150} />
-        </div>
-      )}
-
-      <Header
-        className="flex items-center px-6 shadow-md"
-        style={{
-          backgroundColor: token.color.darkViolet,
-        }}
+    <Suspense fallback={<Spin size="large" />}>
+      <AntLayout
+        className="min-h-screen relative"
+        style={{ backgroundColor: token.color.grey[100] }}
       >
-        {options.showBackButton && (
+        {isLoading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75 z-50">
+            <Lottie options={loaderOptions} height={150} width={150} />
+          </div>
+        )}
+
+        <Header
+          className="flex items-center px-6 shadow-md"
+          style={{
+            backgroundColor: token.color.darkViolet,
+          }}
+        >
+          {options.showBackButton && (
+            <Button
+              type="link"
+              onClick={() => router.back()}
+              icon={<ArrowLeftOutlined />}
+              style={{
+                color: token.color.white,
+                fontSize: "16px",
+                fontWeight: "bold",
+                padding: 0,
+              }}
+            >
+              Back
+            </Button>
+          )}
+
+          {options.title && (
+            <Title
+              level={5}
+              className="mx-auto ml-4 text-lg font-semibold leading-[48px] text-center"
+              style={{
+                color: token.color.white,
+              }}
+            >
+              {options.title}
+            </Title>
+          )}
+
           <Button
             type="link"
-            onClick={() => router.back()}
-            icon={<ArrowLeftOutlined />}
+            onClick={() => router.push("/")}
+            icon={<HomeOutlined />}
             style={{
               color: token.color.white,
               fontSize: "16px",
               fontWeight: "bold",
               padding: 0,
             }}
+            className="ml-auto"
           >
-            Back
+            Home
           </Button>
-        )}
+        </Header>
 
-        {options.title && (
-          <Title
-            level={5}
-            className="mx-auto ml-4 text-lg font-semibold leading-[48px] text-center"
-            style={{
-              color: token.color.white,
-            }}
-          >
-            {options.title}
-          </Title>
-        )}
+        <Content className="p-6">{!isLoading && children}</Content>
 
-        <Button
-          type="link"
-          onClick={() => router.push("/")}
-          icon={<HomeOutlined />}
+        <Footer
+          className="text-center p-4 text-sm border-t"
           style={{
-            color: token.color.white,
-            fontSize: "16px",
-            fontWeight: "bold",
-            padding: 0,
+            backgroundColor: token.color.grey[100],
+            borderTop: `1px solid ${token.color.grey[300]}`,
           }}
-          className="ml-auto"
         >
-          Home
-        </Button>
-      </Header>
-
-      <Content className="p-6">{!isLoading && children}</Content>
-
-      <Footer
-        className="text-center p-4 text-sm border-t"
-        style={{
-          backgroundColor: token.color.grey[100],
-          borderTop: `1px solid ${token.color.grey[300]}`,
-        }}
-      >
-        <Text type="secondary">
-          (REAP) Compliance API Demo © {new Date().getFullYear()}
-        </Text>
-      </Footer>
-    </AntLayout>
+          <Text type="secondary">
+            (REAP) Compliance API Demo © {new Date().getFullYear()}
+          </Text>
+        </Footer>
+      </AntLayout>
+    </Suspense>
   );
 }
