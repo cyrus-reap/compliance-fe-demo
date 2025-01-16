@@ -4,7 +4,7 @@ import { ReactNode, useState, useEffect, Suspense } from "react";
 import { Button, Layout as AntLayout, Typography, Spin } from "antd";
 import { ArrowLeftOutlined, HomeOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
-import Lottie from "react-lottie";
+// import Lottie from "react-lottie";
 import animationData from "@/public/kyc-loader.json";
 import { token } from "@/app/theme";
 import { useLayout } from "@/app/layoutContext";
@@ -18,20 +18,20 @@ export default function Layout({ children }: { children: ReactNode }) {
   const { options } = useLayout();
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    let timeout: NodeJS.Timeout;
+  // useEffect(() => {
+  //   let timeout: NodeJS.Timeout;
 
-    const handleRouteChange = () => {
-      setIsLoading(true);
-      timeout = setTimeout(() => setIsLoading(false), 700);
-    };
+  //   const handleRouteChange = () => {
+  //     setIsLoading(true);
+  //     timeout = setTimeout(() => setIsLoading(false), 700);
+  //   };
 
-    handleRouteChange();
+  //   handleRouteChange();
 
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, []);
+  //   return () => {
+  //     clearTimeout(timeout);
+  //   };
+  // }, []);
 
   const loaderOptions = {
     loop: true,
@@ -42,10 +42,10 @@ export default function Layout({ children }: { children: ReactNode }) {
     },
   };
 
-  const LottieLoader = () => {
-    if (typeof window === "undefined") return null;
-    return <Lottie options={loaderOptions} height={150} width={150} />;
-  };
+  // const LottieLoader = () => {
+  //   if (typeof window === "undefined") return null;
+  //   return <Lottie options={loaderOptions} height={150} width={150} />;
+  // };
 
   return (
     <Suspense fallback={<Spin size="large" />}>
@@ -53,11 +53,11 @@ export default function Layout({ children }: { children: ReactNode }) {
         className="min-h-screen relative"
         style={{ backgroundColor: token.color.grey[100] }}
       >
-        {isLoading && (
+        {/* {isLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-gray-100 z-50">
             <LottieLoader />
           </div>
-        )}
+        )} */}
 
         <Header
           className="flex items-center px-6 shadow-md"
