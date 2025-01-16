@@ -52,17 +52,21 @@ export default function Home() {
 
       <div className="flex flex-col md:flex-row gap-6 mb-12">
         <Link href="/kyc/entity">
-          <Button type="primary" size="large" className="shadow-sm">
+          <Button
+            type="primary"
+            size="large"
+            className="shadow-sm w-full md:w-auto"
+          >
             Start KYC Verification
           </Button>
         </Link>
         <Link href="/kyc/features">
-          <Button size="large" className="shadow-sm">
+          <Button size="large" className="shadow-sm w-full md:w-auto">
             View Features
           </Button>
         </Link>
         <Link href="/kyc/entities">
-          <Button size="large" className="shadow-sm">
+          <Button size="large" className="shadow-sm w-full md:w-auto">
             View Entities
           </Button>
         </Link>
