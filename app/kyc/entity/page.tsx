@@ -1,50 +1,89 @@
 "use client";
 
-import { usePostEntityHook } from "@/hooks/usePostEntityHook";
 import { useRouter } from "next/navigation";
-import { Button, Input, Typography, Alert, Divider, Tooltip } from "antd";
+import { Button, Input, Typography, Alert, Divider, Tooltip, Spin } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { Formik, Field, Form, ErrorMessage } from "formik";
-import { CreateEntityType, EntityType } from "@/types";
+import { usePostEntityHook } from "@/hooks/usePostEntityHook";
+import { useGetFeatureRequirementsHook } from "@/hooks/useGetFeatureRequirementsHook";
+import {
+  CreateEntityType,
+  EntityType,
+  RequirementLevel,
+  ValueType,
+} from "@/types";
 import * as Yup from "yup";
 import NationalitySelector from "@/components/NationalitySelector";
 import PhoneNumberInput from "@/components/PhoneNumberInput";
 
 const { Title } = Typography;
 
-const validationSchema = Yup.object({
+const validationSchema = Yup.object().shape({
   type: Yup.string()
     .oneOf(["INDIVIDUAL", "BUSINESS"], "Invalid entity type")
     .required("Entity type is required"),
-  requirements: Yup.array()
-    .of(
-      Yup.object({
-        requirementSlug: Yup.string().required("Requirement slug is required"),
-        value: Yup.mixed().required("Requirement value is required"),
-      })
-    )
-    .required("Requirements are required"),
+  requirements: Yup.array().of(
+    Yup.object().shape({
+      requirementSlug: Yup.string().required("Requirement slug is required"),
+      value: Yup.mixed().test(
+        "is-required",
+        "Value is required",
+        function (value) {
+          const { parent } = this;
+          return (
+            parent.requirementLevel !== RequirementLevel.REQUIRED || !!value
+          );
+        }
+      ),
+    })
+  ),
 });
+
+const requirementsSlugToSkip = [
+  "jumio-identity",
+  "entity-name",
+  "proof-of-address",
+  "sanction-screening",
+];
+
+const valueTypeToSkip = [ValueType.FILE, ValueType.JSON];
 
 export default function CreateEntityPage() {
   const router = useRouter();
   const { mutate, isPending, isError, isSuccess, error } = usePostEntityHook();
 
+  const { data, isLoading } = useGetFeatureRequirementsHook(
+    "86613565-82fc-405e-a565-40d2d35b317e"
+  );
+
+  const initialRequirements =
+    data?.items
+      ?.filter(
+        (requirement) =>
+          !requirementsSlugToSkip.includes(requirement.requirementSlug) &&
+          !valueTypeToSkip.includes(requirement.valueType)
+      )
+      .map((requirement) => ({
+        requirementSlug: requirement.requirementSlug,
+        value: "",
+        requirementLevel: requirement.requirementLevel,
+      })) || [];
+
   const initialValues: CreateEntityType = {
     externalId: Math.random().toString(36).substring(2, 15),
-    requirements: [
-      { requirementSlug: "individual-entity-name", value: "" },
-      { requirementSlug: "nationality", value: "" },
-      {
-        requirementSlug: "phone-number",
-        value: "",
-      },
-    ],
+    requirements: initialRequirements,
     type: EntityType.INDIVIDUAL,
   };
 
   const handleSubmit = (values: CreateEntityType) => {
-    mutate(values, {
+    const filteredValues = {
+      ...values,
+      requirements: (values.requirements || [])
+        .filter((req) => req.value)
+        .map(({ requirementSlug, value }) => ({ requirementSlug, value })), // Exclude `requirementLevel`
+    };
+
+    mutate(filteredValues, {
       onSuccess: (data) => {
         const { id: entityId } = data;
         router.push(`/kyc/proof-of-address/${entityId}`);
@@ -57,6 +96,14 @@ export default function CreateEntityPage() {
     nationality: "The nationality of the individual.",
     "phone-number": "The phone number including country code.",
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Spin size="large" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-6">
@@ -84,6 +131,7 @@ export default function CreateEntityPage() {
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
+        enableReinitialize
       >
         {({ touched, errors, setFieldValue, values }: any) => (
           <Form className="w-full max-w-md space-y-4 bg-white p-6 rounded shadow">
@@ -120,7 +168,11 @@ export default function CreateEntityPage() {
                     >
                       {requirement.requirementSlug
                         .replace(/-/g, " ")
-                        .toUpperCase()}
+                        .toUpperCase()}{" "}
+                      {requirement.requirementLevel ===
+                        RequirementLevel.REQUIRED && (
+                        <span className="text-red-500">*</span>
+                      )}
                     </label>
                     <Tooltip
                       title={
