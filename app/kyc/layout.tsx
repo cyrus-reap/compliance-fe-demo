@@ -49,7 +49,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         style={{ backgroundColor: token.color.grey[100] }}
       >
         {isLoading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75 z-50">
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-100 z-50">
             <Lottie options={loaderOptions} height={150} width={150} />
           </div>
         )}
