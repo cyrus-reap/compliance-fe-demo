@@ -102,9 +102,9 @@ export default function Home() {
           </Title>
           <Carousel
             autoplay
-            dotPosition="bottom"
+            arrows
+            draggable
             className="rounded-lg overflow-hidden shadow-md"
-            dots={{ className: "text" }}
           >
             {carouselContent.map((step, index) => (
               <div key={index} className="p-6">
