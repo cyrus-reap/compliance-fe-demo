@@ -1,8 +1,9 @@
 import React from "react";
-import { Card, Typography, Button, Image, Badge } from "antd";
+import { Card, Typography, Button, Image, Badge, Collapse } from "antd";
 import { DownloadOutlined } from "@ant-design/icons";
 
 const { Text } = Typography;
+const { Panel } = Collapse;
 
 interface RequirementCardProps {
   name: string;
@@ -56,17 +57,36 @@ const RequirementCard: React.FC<RequirementCardProps> = ({
     }
 
     if (value && typeof value === "object") {
+      const isLong = Object.keys(value).length > 3;
+
       return (
-        <div className="text-gray-600 mt-4">
-          <Text>Details:</Text>
-          <ul className="list-disc ml-6 mt-2">
-            {Object.entries(value).map(([key, val]) => (
-              <li key={key}>
-                <Text strong>{key}:</Text> <Text>{JSON.stringify(val)}</Text>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <Collapse className="mt-4">
+          <Panel
+            header={
+              isLong ? "Details (Click to Expand)" : "Details (Click for More)"
+            }
+            key="1"
+          >
+            <ul className="list-disc ml-6 mt-2">
+              {Object.entries(value).map(([key, val]) => (
+                <li key={key}>
+                  <Text strong>{key}:</Text> <Text>{JSON.stringify(val)}</Text>
+                </li>
+              ))}
+            </ul>
+          </Panel>
+        </Collapse>
+      );
+    }
+
+    const isLongValue = typeof value === "string" && value.length > 100;
+    if (isLongValue) {
+      return (
+        <Collapse className="mt-4">
+          <Panel header="Value (Click to Expand)" key="2">
+            <Text>{value}</Text>
+          </Panel>
+        </Collapse>
       );
     }
 
