@@ -102,3 +102,31 @@ textarea:focus {
 .custom-steps-vertical .ant-steps-item-title {
   font-weight: 600;
 }
+
+/* Custom steps styling */
+.custom-steps .ant-steps-item-process .ant-steps-item-icon {
+  background-color: #806aaa;
+  border-color: #806aaa;
+}
+
+.custom-steps .ant-steps-item-finish .ant-steps-item-icon {
+  border-color: #806aaa;
+}
+
+.custom-steps .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon {
+  color: #806aaa;
+}
+
+.custom-steps
+  .ant-steps-item-finish
+  > .ant-steps-item-container
+  > .ant-steps-item-content
+  > .ant-steps-item-title::after {
+  background-color: #e2d6f5;
+}
+
+/* Custom Sumsub container styling */
+#sumsub-sdk-container iframe {
+  border-radius: 0;
+  box-shadow: none !important;
+}

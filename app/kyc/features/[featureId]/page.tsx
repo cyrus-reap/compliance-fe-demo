@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useGetFeatureRequirementsHook } from "@/hooks/useGetFeatureRequirementsHook";
-import { Table, Button, Typography, Spin } from "antd";
-import { ReloadOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
-
-const { Title } = Typography;
+import PageHeader from "@/components/shared/PageHeader";
+import RequirementTable from "@/components/features/RequirementTable";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import ErrorCard from "@/components/shared/ErrorCard";
 
 export default function FeatureRequirements({
   params,
@@ -16,83 +16,41 @@ export default function FeatureRequirements({
   const [featureId, setFeatureId] = useState<string | null>(null);
   const router = useRouter();
 
-  useState(() => {
+  useEffect(() => {
     params.then(({ featureId }) => setFeatureId(featureId));
-  });
+  }, [params]);
 
   const { data, isLoading, error, refetch } = useGetFeatureRequirementsHook(
     featureId ?? ""
   );
 
-  const columns = [
-    {
-      title: "Requirement ID",
-      dataIndex: "requirementId",
-      key: "requirementId",
-      align: "center" as const,
-    },
-    {
-      title: "Requirement Slug",
-      dataIndex: "requirementSlug",
-      key: "requirementSlug",
-      align: "center" as const,
-    },
-    {
-      title: "Associated Entity",
-      dataIndex: "associatedEntity",
-      key: "associatedEntity",
-      align: "center" as const,
-    },
-    {
-      title: "Requirement Level",
-      dataIndex: "requirementLevel",
-      key: "requirementLevel",
-      align: "center" as const,
-    },
-    {
-      title: "Value Type",
-      dataIndex: "valueType",
-      key: "valueType",
-      align: "center" as const,
-    },
-  ];
-
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <Spin size="large" />
-      </div>
-    );
+    return <LoadingSpinner tip="Loading requirements..." fullHeight />;
   }
 
   if (error) {
     return (
-      <div className="text-center mt-8">
-        <Title level={4} type="danger">
-          Failed to fetch requirements
-        </Title>
-        <Button
-          onClick={() => refetch()}
-          type="primary"
-          icon={<ReloadOutlined />}
-          className="mt-4"
-        >
-          Retry
-        </Button>
-      </div>
+      <ErrorCard
+        title="Failed to fetch requirements"
+        description="There was an error retrieving the requirement data. Please try again."
+        onRetry={() => refetch()}
+        onBack={() => router.push("/kyc/features")}
+        backText="Back to Features"
+      />
     );
   }
 
   return (
     <div className="p-6">
-      <Title level={2}>Requirements</Title>
-      <Table
-        dataSource={data?.items || []}
-        columns={columns}
-        rowKey="requirementId"
-        pagination={false}
-        bordered
+      <PageHeader
+        title="Feature Requirements"
+        onBack={() => router.push("/kyc/features")}
+        backText="Back to Features"
+        onRefresh={() => refetch()}
+        tooltip="Requirements needed for this feature to be enabled"
       />
+
+      <RequirementTable data={data?.items} loading={isLoading} />
     </div>
   );
 }
