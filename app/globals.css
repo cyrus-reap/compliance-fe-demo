@@ -62,3 +62,43 @@ textarea:focus {
   outline: 2px solid rgba(60, 42, 89, 0.3);
   outline-offset: 2px;
 }
+
+/* API Overview custom styles */
+.api-overview-tabs .ant-tabs-nav {
+  margin-bottom: 24px;
+}
+
+.api-overview-tabs .ant-tabs-tab.ant-tabs-tab-active {
+  background-color: #e0f2fe;
+  border-color: #0ea0e9;
+}
+
+.api-overview-tabs .ant-tabs-tab:hover {
+  color: #0ea0e9;
+}
+
+.api-overview-tabs .ant-tabs-tab-btn {
+  padding: 4px 0;
+}
+
+/* Custom vertical steps */
+.custom-steps-vertical .ant-steps-item-container {
+  padding-bottom: 24px;
+}
+
+.custom-steps-vertical .ant-steps-item-icon {
+  background-color: #3c2a59;
+  border-color: #3c2a59;
+}
+
+.custom-steps-vertical .ant-steps-item-icon .ant-steps-icon {
+  color: white;
+}
+
+.custom-steps-vertical .ant-steps-item-content {
+  min-height: auto;
+}
+
+.custom-steps-vertical .ant-steps-item-title {
+  font-weight: 600;
+}

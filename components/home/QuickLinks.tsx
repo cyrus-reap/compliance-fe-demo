@@ -30,12 +30,17 @@ function QuickLink({
         style={{ borderTopColor: borderColor }}
       >
         <div className="text-center mb-4">
-          <div className={`${bgColorClass} inline-flex p-4 rounded-full mb-4`}>
+          <div
+            className="inline-flex p-4 rounded-full mb-4"
+            style={{ backgroundColor: bgColorClass }}
+          >
             {icon}
           </div>
           <Title level={3}>{title}</Title>
         </div>
-        <Paragraph className="text-gray-600">{description}</Paragraph>
+        <Paragraph style={{ color: token.color.grey[600] }}>
+          {description}
+        </Paragraph>
       </Card>
     </Link>
   );
@@ -54,7 +59,7 @@ export default function QuickLinks() {
         />
       ),
       href: "/kyc/entity",
-      bgColorClass: "bg-purple-100",
+      bgColorClass: token.color.lightViolet[200],
       borderColor: token.color.darkViolet,
     },
     {
@@ -68,7 +73,7 @@ export default function QuickLinks() {
         />
       ),
       href: "/kyc/features",
-      bgColorClass: "bg-blue-100",
+      bgColorClass: token.color.lightBlue[200],
       borderColor: token.color.lightBlue[700],
     },
     {
@@ -82,7 +87,7 @@ export default function QuickLinks() {
         />
       ),
       href: "/kyc/entities",
-      bgColorClass: "bg-green-100",
+      bgColorClass: token.color.green[200],
       borderColor: token.color.green[600],
     },
   ];

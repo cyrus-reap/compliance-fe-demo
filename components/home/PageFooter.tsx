@@ -1,28 +1,44 @@
 import { Typography } from "antd";
+import { token } from "@/app/theme";
 
 const { Text } = Typography;
 
 export default function PageFooter() {
   return (
-    <footer className="py-8 text-center bg-gray-800 text-white">
+    <footer
+      className="py-8 text-center"
+      style={{
+        backgroundColor: token.color.grey[800],
+        color: token.color.white,
+      }}
+    >
       <div className="container mx-auto">
         <div className="mb-4">
-          <Text className="text-gray-300 text-sm">
+          <Text className="text-sm" style={{ color: token.color.grey[300] }}>
             <a
               href="https://reap-ra.readme.io"
-              className="text-gray-300 hover:text-white mr-4"
+              className="mr-4 hover:text-white"
+              style={{ color: token.color.grey[300] }}
             >
               Documentation
             </a>
-            <a href="#" className="text-gray-300 hover:text-white mr-4">
+            <a
+              href="#"
+              className="mr-4 hover:text-white"
+              style={{ color: token.color.grey[300] }}
+            >
               Support
             </a>
-            <a href="#" className="text-gray-300 hover:text-white">
+            <a
+              href="#"
+              className="hover:text-white"
+              style={{ color: token.color.grey[300] }}
+            >
               Contact
             </a>
           </Text>
         </div>
-        <Text className="text-gray-400 text-sm">
+        <Text className="text-sm" style={{ color: token.color.grey[400] }}>
           Reap Compliance API Demo © {new Date().getFullYear()}
         </Text>
       </div>

@@ -64,7 +64,7 @@ export default function AppHeader({
           <Link href="/" className="hidden md:flex items-center">
             <div className="relative h-8 w-20 mr-3">
               <Image
-                src="/logo.svg"
+                src="/logo-words.png"
                 alt="Reap Logo"
                 fill
                 priority
