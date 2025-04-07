@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, ReactNode } from "react";
 
-interface LayoutOptions {
+export interface LayoutOptions {
   title?: string;
   showBackButton?: boolean;
 }

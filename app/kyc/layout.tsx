@@ -1,21 +1,22 @@
 "use client";
 
 import { ReactNode, useState, useEffect, Suspense } from "react";
-import { Button, Layout as AntLayout, Typography, Spin } from "antd";
-import { ArrowLeftOutlined, HomeOutlined } from "@ant-design/icons";
-import { useRouter, usePathname } from "next/navigation";
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import { token } from "@/app/theme";
+import { Layout as AntLayout, Spin } from "antd";
+import { usePathname } from "next/navigation";
 import { useLayout } from "@/app/layoutContext";
+import { useNavigationItems } from "@/components/layout/NavigationConfig";
+import AppHeader from "@/components/layout/AppHeader";
+import AppFooter from "@/components/layout/AppFooter";
+import LoadingOverlay from "@/components/layout/LoadingOverlay";
+import MainContent from "@/components/layout/MainContent";
 
-const { Header, Content, Footer } = AntLayout;
-const { Title, Text } = Typography;
+const { Content, Footer, Header } = AntLayout;
 
 export default function Layout({ children }: { children: ReactNode }) {
-  const router = useRouter();
   const pathname = usePathname();
   const { options } = useLayout();
   const [isLoading, setIsLoading] = useState(false);
+  const navigationItems = useNavigationItems();
 
   useEffect(() => {
     let timeout: NodeJS.Timeout;
@@ -34,83 +35,19 @@ export default function Layout({ children }: { children: ReactNode }) {
 
   return (
     <Suspense fallback={<Spin size="large" />}>
-      <AntLayout
-        className="min-h-screen relative"
-        style={{ backgroundColor: token.color.grey[100] }}
-      >
-        {isLoading && (
-          <div className="absolute inset-0 flex items-center justify-center z-50 w-1/2 mx-auto">
-            <DotLottieReact
-              src="/kyc-loader.lottie"
-              loop
-              autoplay
-              style={{ width: "200px" }}
-            />
-          </div>
-        )}
-
-        <Header
-          className="flex items-center px-6 shadow-md"
-          style={{
-            backgroundColor: token.color.darkViolet,
-          }}
-        >
-          {options.showBackButton && (
-            <Button
-              type="link"
-              onClick={() => router.back()}
-              icon={<ArrowLeftOutlined />}
-              style={{
-                color: token.color.white,
-                fontSize: "16px",
-                fontWeight: "bold",
-                padding: 0,
-              }}
-            >
-              Back
-            </Button>
-          )}
-
-          {options.title && (
-            <Title
-              level={5}
-              className="mx-auto ml-4 text-lg font-semibold leading-[48px] text-center"
-              style={{
-                color: token.color.white,
-              }}
-            >
-              {options.title}
-            </Title>
-          )}
-
-          <Button
-            type="link"
-            onClick={() => router.push("/")}
-            icon={<HomeOutlined />}
-            style={{
-              color: token.color.white,
-              fontSize: "16px",
-              fontWeight: "bold",
-              padding: 0,
-            }}
-            className="ml-auto"
-          >
-            Home
-          </Button>
+      <AntLayout className="min-h-screen">
+        <Header className="p-0 h-auto">
+          <AppHeader options={options} navigationItems={navigationItems} />
         </Header>
 
-        <Content className="p-6">{!isLoading && children}</Content>
+        <LoadingOverlay isLoading={isLoading} />
 
-        <Footer
-          className="text-center p-4 text-sm border-t"
-          style={{
-            backgroundColor: token.color.grey[100],
-            borderTop: `1px solid ${token.color.grey[300]}`,
-          }}
-        >
-          <Text type="secondary">
-            (REAP) Compliance API Demo © {new Date().getFullYear()}
-          </Text>
+        <Content>
+          <MainContent isLoading={isLoading}>{children}</MainContent>
+        </Content>
+
+        <Footer className="p-0">
+          <AppFooter />
         </Footer>
       </AntLayout>
     </Suspense>
