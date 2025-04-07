@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Typography, Spin, Card, Alert, Button, Steps, Space } from "antd";
+import { Typography, Spin, Card, Alert, Button, Space } from "antd";
 import { useRouter } from "next/navigation";
 import { useLayout } from "@/app/layoutContext";
 import { token } from "@/app/theme";
 import { LoadingOutlined, LockOutlined } from "@ant-design/icons";
 import { motion } from "framer-motion";
 import snsWebSdk from "@sumsub/websdk";
+import { SumSubReviewStatus } from "@/types/sumsub";
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -20,7 +21,6 @@ export default function CreateEntityPage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const { setOptions } = useLayout();
 
-  // Set page options
   useEffect(() => {
     setOptions({
       title: "Identity Verification",
@@ -31,7 +31,6 @@ export default function CreateEntityPage() {
       setOptions({ title: "", showBackButton: true, featuredTag: undefined });
   }, [setOptions]);
 
-  // Initialize Sumsub Web SDK
   useEffect(() => {
     const initSdk = async () => {
       try {
@@ -55,25 +54,37 @@ export default function CreateEntityPage() {
             addViewportTag: false,
             adaptIframeHeight: true,
           })
-
+          // Handle step completion event
           .on("idCheck.onStepCompleted", (payload) => {
             console.log("Step completed:", payload);
-
-            if (payload?.step === "IDENTITY") {
+          })
+          // Listen for applicant status changes
+          .on("idCheck.onApplicantStatusChanged", (payload) => {
+            console.log("Applicant status changed:", payload);
+            if (
+              payload &&
+              (payload.reviewStatus === SumSubReviewStatus.APPROVED ||
+                payload.reviewStatus === SumSubReviewStatus.COMPLETED)
+            ) {
+              // Navigate to next screen when the entire verification is completed
               router.push("/kyc/proof-of-address/dummy-entity-id");
             }
           })
-          .on("idCheck.onApplicantCreated", (payload) => {
-            console.log("Applicant created:", payload);
+          .on("idCheck.onApplicantSubmitted", () => {
+            console.log("Applicant submitted all documents");
+            // Alternatively, you can navigate here if you want to move to the next step
+            // after the user has submitted all required documents
+            // router.push("/kyc/proof-of-address/dummy-entity-id");
+          })
+          .on("idCheck.onApplicantLoaded", (payload) => {
+            console.log("Applicant loaded:", payload);
             if (payload.applicantId) {
               localStorage.setItem("sumsubApplicantId", payload.applicantId);
             }
           })
           .on("idCheck.onError", (error) => {
             console.error("Sumsub error:", error);
-            setError(
-              `Verification error: ${error.description || "Unknown error"}`
-            );
+            setError(`Verification error: ${error.reason || "Unknown error"}`);
           })
           .onMessage((type, payload) => {
             console.log("Sumsub message:", type, payload);
@@ -85,9 +96,9 @@ export default function CreateEntityPage() {
         sdkRef.current = snsWebSdkInstance;
         setIsInitialized(true);
         setIsLoading(false);
-      } catch (err: any) {
+      } catch (err) {
         console.error("Error launching Sumsub SDK:", err);
-        setError(`Failed to start verification: ${err.message}`);
+        setError(`Failed to start verification: ${err}`);
         setIsLoading(false);
       }
     };
