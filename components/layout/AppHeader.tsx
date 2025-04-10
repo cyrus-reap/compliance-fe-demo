@@ -29,14 +29,22 @@ export default function AppHeader({
   const [scrolled, setScrolled] = useState(false);
   const [activeKey, setActiveKey] = useState("");
 
-  // Handle scroll effect
+  // Handle scroll effect with proper cleanup to prevent memory leaks
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 10);
     };
 
+    // Add event listener
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+
+    // Call once to set initial state
+    handleScroll();
+
+    // Cleanup function to remove event listener
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   // Set active navigation key based on pathname

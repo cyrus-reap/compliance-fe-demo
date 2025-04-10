@@ -139,6 +139,11 @@ export default function Hero() {
             >
               <Card
                 className="w-full rounded-xl shadow-2xl overflow-hidden"
+                styles={{
+                  body: {
+                    padding: 16,
+                  },
+                }}
                 style={{
                   backgroundColor: "rgba(255, 255, 255, 0.1)",
                   backdropFilter: "blur(8px)",

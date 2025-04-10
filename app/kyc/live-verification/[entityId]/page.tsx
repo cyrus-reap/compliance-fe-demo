@@ -29,8 +29,6 @@ export default function IdentityVerification({
     mutate({
       entityId,
       memberId: memberId || undefined,
-      failureUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/kyc/live-verification?status=failed&entityId=${entityId}`,
-      successUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/kyc/live-verification?status=success&entityId=${entityId}`,
     });
   }, [entityId, memberId, mutate]);
 
@@ -40,11 +38,7 @@ export default function IdentityVerification({
     }
   }, [error]);
 
-  useEffect(() => {
-    if (data?.web_href) {
-      window.location.href = data.web_href;
-    }
-  }, [data]);
+  useEffect(() => {}, [data]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-6 gap-6">
@@ -78,8 +72,6 @@ export default function IdentityVerification({
             mutate({
               entityId,
               memberId: memberId || undefined,
-              failureUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/kyc/live-verification?status=failed`,
-              successUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/kyc/live-verification?status=success`,
             })
           }
         >
