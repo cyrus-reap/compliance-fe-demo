@@ -10,19 +10,14 @@ import { KycParams, KycResponse } from "@/types";
  * @returns {Promise<KycResponse>} - The response containing the `web_href`.
  */
 export const fetchKycLink = async (params: KycParams): Promise<KycResponse> => {
-  const { entityId, memberId, successUrl, failureUrl } = params;
-
-  const data = {
-    successUrl,
-    failureUrl,
-  };
+  const { entityId, memberId } = params;
 
   try {
     const response = await axios.post(
       `${
         process.env.NEXT_PUBLIC_COMPLIANCE_API_URL
       }/entity/${entityId}/kyc?memberId=${memberId || ""}`,
-      data,
+      {},
       {
         headers: {
           "Content-Type": "application/json",
