@@ -1,17 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Spin, Typography, Button, message } from "antd";
 import { LoadingOutlined, ReloadOutlined } from "@ant-design/icons";
 import { token } from "@/app/theme";
 import { SumSubReviewStatus } from "@/types/sumsub";
+import SumsubWebSdk from "@sumsub/websdk-react";
 
 const { Text } = Typography;
-
-// Import Sumsub SDK from CDN - this is the recommended approach by Sumsub
-declare global {
-  interface Window {
-    snsWebSdk: any;
-  }
-}
 
 interface SumsubVerificationStepProps {
   sdkToken: string;
@@ -28,165 +22,74 @@ export default function SumsubVerificationStep({
   onSubmitted,
   onError,
 }: SumsubVerificationStepProps) {
-  const [isInitialized, setIsInitialized] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [initError, setInitError] = useState<string | null>(null);
-  const [isScriptLoaded, setIsScriptLoaded] = useState(false);
-  const sdkRef = useRef<any>(null);
 
-  // Container ID - use a consistent ID as recommended by Sumsub
-  const containerId = "sumsub-websdk-container";
+  // Token expiration handler - in production, this should refresh the token
+  const accessTokenExpirationHandler = useCallback(() => {
+    console.log("[SumSub] Token expired");
+    return Promise.resolve(sdkToken);
+  }, [sdkToken]);
 
-  // Load the Sumsub SDK script
-  useEffect(() => {
-    console.log("[SumSub] Loading SDK script");
+  // Message handler for all Sumsub events
+  const messageHandler = useCallback(
+    (type: string, payload: any) => {
+      console.log(`[SumSub] Message: ${type}`, payload);
 
-    // Check if script is already loaded
-    if (window.snsWebSdk) {
-      console.log("[SumSub] SDK already available");
-      setIsScriptLoaded(true);
-      return;
-    }
-
-    const script = document.createElement("script");
-    script.id = "sumsub-sdk-script";
-    script.src =
-      "https://static.sumsub.com/idensic/static/sns-websdk-builder.js";
-    script.async = true;
-
-    script.onload = () => {
-      console.log("[SumSub] SDK script loaded");
-      setIsScriptLoaded(true);
-    };
-
-    script.onerror = () => {
-      console.error("[SumSub] Failed to load SDK script");
-      setInitError("Failed to load verification module");
-      setIsLoading(false);
-    };
-
-    document.head.appendChild(script);
-
-    return () => {
-      // Don't remove script as it might be used by other instances
-    };
-  }, []);
-
-  // Initialize the Sumsub SDK when the script is loaded and we have a token
-  useEffect(() => {
-    // Don't proceed if we don't have what we need
-    if (!sdkToken || !isScriptLoaded || !window.snsWebSdk) {
-      return;
-    }
-
-    console.log("[SumSub] Initializing SDK with token");
-
-    // Check if container exists
-    const containerElement = document.getElementById(containerId);
-    if (!containerElement) {
-      console.error("[SumSub] Container element not found");
-      setInitError("Container element not found");
-      setIsLoading(false);
-      return;
-    }
-
-    // Give the DOM time to render
-    const initTimer = setTimeout(() => {
-      try {
-        setIsLoading(true);
-        setInitError(null);
-
-        // Clear any previous content
-        containerElement.innerHTML = "";
-
-        // Initialize SDK based on Sumsub's recommended approach
-        const snsWebSdkInstance = window.snsWebSdk
-          .init(sdkToken, () => {
-            console.log("[SumSub] Token expired");
-            return Promise.resolve(sdkToken);
-          })
-          .withConf({
-            lang: "en",
-          })
-          .withOptions({
-            addViewportTag: false,
-            adaptIframeHeight: true,
-          })
-          .on("idCheck.onStepCompleted", (payload: any) => {
-            console.log("[SumSub] Step completed:", payload);
-          })
-          .on("idCheck.onApplicantStatusChanged", (payload: any) => {
-            console.log("[SumSub] Status changed:", payload);
-            if (
-              payload &&
-              entityId &&
-              (payload.reviewStatus === SumSubReviewStatus.APPROVED ||
-                payload.reviewStatus === SumSubReviewStatus.COMPLETED)
-            ) {
-              onComplete(entityId);
-            }
-          })
-          .on("idCheck.onApplicantSubmitted", () => {
-            console.log("[SumSub] Applicant submitted documents");
-            message.success("Verification submitted successfully!");
-            onSubmitted();
-          })
-          .on("idCheck.onApplicantLoaded", (payload: any) => {
-            console.log("[SumSub] Applicant loaded:", payload);
-            setIsLoading(false);
-            setIsInitialized(true);
-          })
-          .on("idCheck.onError", (error: any) => {
-            console.error("[SumSub] Error:", error);
-            setInitError(
-              `Verification error: ${error.reason || "Unknown error"}`
-            );
-            onError(`Verification error: ${error.reason || "Unknown error"}`);
-          })
-          .onMessage((type: string, payload: any) => {
-            console.log("[SumSub] Message:", type, payload);
-          })
-          .build();
-
-        // Launch WebSDK using ID selector as recommended by Sumsub
-        console.log(`[SumSub] Launching SDK in container: #${containerId}`);
-        snsWebSdkInstance.launch(`#${containerId}`);
-        sdkRef.current = snsWebSdkInstance;
-
-        // Safety timeout in case onApplicantLoaded doesn't fire
-        setTimeout(() => {
-          if (isLoading) {
-            console.log(
-              "[SumSub] Timeout reached, setting as initialized anyway"
-            );
-            setIsLoading(false);
-            setIsInitialized(true);
+      switch (type) {
+        case "idCheck.onApplicantStatusChanged":
+          if (
+            payload &&
+            entityId &&
+            (payload.reviewStatus === SumSubReviewStatus.APPROVED ||
+              payload.reviewStatus === SumSubReviewStatus.COMPLETED)
+          ) {
+            onComplete(entityId);
           }
-        }, 8000);
-      } catch (err) {
-        console.error("[SumSub] Initialization error:", err);
-        setInitError(`Failed to initialize verification: ${err}`);
-        onError(`Failed to initialize verification: ${err}`);
-        setIsLoading(false);
-      }
-    }, 200); // Small delay to ensure DOM is ready
+          break;
 
-    return () => {
-      clearTimeout(initTimer);
-      if (sdkRef.current) {
-        console.log("[SumSub] Cleaning up SDK instance");
-        sdkRef.current = null;
+        case "idCheck.onApplicantSubmitted":
+          console.log("[SumSub] Applicant submitted documents");
+          message.success("Verification submitted successfully!");
+          onSubmitted();
+          break;
+
+        case "idCheck.onApplicantLoaded":
+          console.log("[SumSub] Applicant loaded:", payload);
+          if (payload.applicantId) {
+            localStorage.setItem("sumsubApplicantId", payload.applicantId);
+          }
+          setIsLoading(false);
+          break;
+
+        case "idCheck.onStepCompleted":
+          console.log("[SumSub] Step completed:", payload);
+          break;
       }
-    };
-  }, [
-    sdkToken,
-    isScriptLoaded,
-    entityId,
-    onComplete,
-    onSubmitted,
-    onError,
-    isLoading,
-  ]);
+    },
+    [entityId, onComplete, onSubmitted]
+  );
+
+  // Error handler
+  const errorHandler = useCallback(
+    (error: any) => {
+      console.error("[SumSub] Error:", error);
+      setInitError(`Verification error: ${error.reason || "Unknown error"}`);
+      onError(`Verification error: ${error.reason || "Unknown error"}`);
+    },
+    [onError]
+  );
+
+  // SDK configuration
+  const config = {
+    lang: "en",
+  };
+
+  // SDK options
+  const options = {
+    addViewportTag: false,
+    adaptIframeHeight: true,
+  };
 
   // Retry handler
   const handleRetry = () => {
@@ -216,14 +119,23 @@ export default function SumsubVerificationStep({
           }
         />
         <Text className="mt-6 text-gray-500">
-          {isScriptLoaded
-            ? "Preparing verification..."
-            : "Loading verification module..."}
+          Loading verification module...
         </Text>
       </div>
     );
   }
 
-  // Return the container div with the exact ID that Sumsub expects
-  return <div id={containerId} className="w-full min-h-[600px]" />;
+  // Use Sumsub's official React component
+  return (
+    <div className="w-full min-h-[600px]">
+      <SumsubWebSdk
+        accessToken={sdkToken}
+        expirationHandler={accessTokenExpirationHandler}
+        config={config}
+        options={options}
+        onMessage={messageHandler}
+        onError={errorHandler}
+      />
+    </div>
+  );
 }
