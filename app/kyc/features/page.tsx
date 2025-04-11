@@ -32,7 +32,7 @@ export default function FeaturesPage() {
   }
 
   return (
-    <div className="p-6">
+    <div>
       <PageHeader
         title="Available Features"
         onRefresh={() => refetch()}
