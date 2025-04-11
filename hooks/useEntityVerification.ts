@@ -86,7 +86,7 @@ export const useEntityVerification = () => {
   // Navigate to a specific route after verification is complete
   const handleComplete = useCallback(
     (id: string) => {
-      router.push(`kyc/entities/${id}`);
+      router.push(`/kyc/entities/${id}`);
     },
     [router]
   );
