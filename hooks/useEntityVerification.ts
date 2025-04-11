@@ -17,6 +17,10 @@ export const useEntityVerification = () => {
   // Initialize flag for auto-start
   const isInitializedRef = useRef(false);
 
+  // Track state in refs to avoid duplicate operations in dev mode
+  const tokenRequestedForEntityRef = useRef<string | null>(null);
+  const entityCreationAttemptedRef = useRef(false);
+
   const {
     mutate: createEntity,
     isPending: isCreatingEntity,
@@ -31,8 +35,16 @@ export const useEntityVerification = () => {
     error: kycTokenError,
   } = useGetKycLinkHook();
 
-  // Create entity with random external ID
+  // Create entity with random external ID - with dev mode safeguard
   const handleCreateEntity = useCallback(() => {
+    // Skip if we've already attempted to create an entity
+    if (entityCreationAttemptedRef.current) {
+      console.log("[Dev] Skipping duplicate entity creation attempt");
+      return;
+    }
+
+    entityCreationAttemptedRef.current = true;
+
     // Reset any previous errors
     setError(null);
 
@@ -48,13 +60,22 @@ export const useEntityVerification = () => {
     });
   }, [createEntity]);
 
-  // Get KYC token for the given entity ID
+  // Get KYC token for the given entity ID - with dev mode safeguard
   const handleGetToken = useCallback(
     (id: string) => {
-      setError(null);
-      getKycSdkToken({ entityId: id });
+      // Skip if we've already requested a token for this entity
+      if (tokenRequestedForEntityRef.current === id) {
+        console.log(`[Dev] Skipping duplicate token request for entity ${id}`);
+        return;
+      }
+
+      if (!sdkToken && !isGettingToken) {
+        tokenRequestedForEntityRef.current = id;
+        setError(null);
+        getKycSdkToken({ entityId: id });
+      }
     },
-    [getKycSdkToken]
+    [getKycSdkToken, sdkToken, isGettingToken]
   );
 
   // Handle document submission completed
@@ -91,27 +112,33 @@ export const useEntityVerification = () => {
     // Reset the initialization flag when component unmounts
     return () => {
       isInitializedRef.current = false;
+      entityCreationAttemptedRef.current = false;
     };
   }, []); // Don't include any dependencies here to ensure this runs only once on mount
 
-  // Remove the auto-creation from the initialization effect
-  // and let EntityCreationStep handle it
+  // Reset refs when unmounting
+  useEffect(() => {
+    return () => {
+      entityCreationAttemptedRef.current = false;
+      tokenRequestedForEntityRef.current = null;
+    };
+  }, []);
 
   // Process entity creation result
   useEffect(() => {
-    if (entityData?.id && !isGettingToken) {
+    if (entityData?.id && !isGettingToken && !entityId) {
       setEntityId(entityData.id);
       setCurrentStep(VerificationStep.TOKEN_PREPARATION);
     }
-  }, [entityData, isGettingToken]);
+  }, [entityData, isGettingToken, entityId]);
 
-  // Process token result
+  // Process token result - add condition to prevent re-setting if we already have token
   useEffect(() => {
-    if (kycTokenData?.sdkToken) {
+    if (kycTokenData?.sdkToken && !sdkToken) {
       setSdkToken(kycTokenData.sdkToken);
       setCurrentStep(VerificationStep.DOCUMENT_VERIFICATION);
     }
-  }, [kycTokenData]);
+  }, [kycTokenData, sdkToken]);
 
   // Handle errors
   useEffect(() => {

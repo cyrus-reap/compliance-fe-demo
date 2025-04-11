@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { Spin, Typography, Button } from "antd";
 import { LoadingOutlined, ReloadOutlined } from "@ant-design/icons";
 import { token } from "@/app/theme";
@@ -18,12 +18,29 @@ export default function TokenPreparationStep({
   onGetToken,
   error = null,
 }: TokenPreparationStepProps) {
+  // Add a ref to track if we've already requested the token
+  const hasRequestedTokenRef = useRef(false);
+
   // Request the token when we have an entity ID
   useEffect(() => {
-    if (entityId && !isGettingToken && !error) {
+    if (
+      entityId &&
+      !isGettingToken &&
+      !error &&
+      !hasRequestedTokenRef.current
+    ) {
+      // Mark that we've requested the token to prevent duplicate requests
+      hasRequestedTokenRef.current = true;
       onGetToken(entityId);
     }
   }, [entityId, isGettingToken, onGetToken, error]);
+
+  // Reset the ref when component unmounts
+  useEffect(() => {
+    return () => {
+      hasRequestedTokenRef.current = false;
+    };
+  }, []);
 
   if (error) {
     return (
@@ -32,7 +49,13 @@ export default function TokenPreparationStep({
         <Button
           type="primary"
           icon={<ReloadOutlined />}
-          onClick={() => entityId && onGetToken(entityId)}
+          onClick={() => {
+            if (entityId) {
+              // Allow retry when there's an error
+              hasRequestedTokenRef.current = false;
+              onGetToken(entityId);
+            }
+          }}
           loading={isGettingToken}
           disabled={!entityId}
         >
