@@ -127,7 +127,7 @@ export default function SumsubVerificationStep({
 
   // Use Sumsub's official React component
   return (
-    <div className="w-full min-h-[600px]">
+    <div className="w-full h-full">
       <SumsubWebSdk
         accessToken={sdkToken}
         expirationHandler={accessTokenExpirationHandler}
