@@ -5,14 +5,20 @@ import { useGetKycLinkHook } from "./useGetKycLinkHook";
 import { EntityType } from "@/types";
 import { VerificationStep } from "@/components/kyc/VerificationStatusSteps";
 
-export const useEntityVerification = (options?: { autoStart?: boolean }) => {
+export const useEntityVerification = (options?: {
+  autoStart?: boolean;
+  entityId?: string | null;
+}) => {
   const autoStart = options?.autoStart ?? true;
+  const initialEntityId = options?.entityId ?? null;
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState<VerificationStep>(
-    VerificationStep.ENTITY_CREATION
+    initialEntityId
+      ? VerificationStep.TOKEN_PREPARATION
+      : VerificationStep.ENTITY_CREATION
   );
-  const [entityId, setEntityId] = useState<string | null>(null);
+  const [entityId, setEntityId] = useState<string | null>(initialEntityId);
   const [sdkToken, setSdkToken] = useState<string | null>(null);
 
   const isInitializedRef = useRef(false);
@@ -84,25 +90,37 @@ export const useEntityVerification = (options?: { autoStart?: boolean }) => {
 
   const prevAutoStartRef = useRef(autoStart);
 
+  // If entityId is provided via options, set it and skip entity creation
+  useEffect(() => {
+    if (initialEntityId) {
+      setEntityId(initialEntityId);
+      setCurrentStep(VerificationStep.TOKEN_PREPARATION);
+    }
+  }, [initialEntityId]);
+
   useEffect(() => {
     if (!prevAutoStartRef.current && autoStart) {
-      setEntityId(null);
+      setEntityId(initialEntityId);
       setSdkToken(null);
-      setCurrentStep(VerificationStep.ENTITY_CREATION);
+      setCurrentStep(
+        initialEntityId
+          ? VerificationStep.TOKEN_PREPARATION
+          : VerificationStep.ENTITY_CREATION
+      );
       setError(null);
       isInitializedRef.current = true;
       tokenRequestedForEntityRef.current = null;
     }
     prevAutoStartRef.current = autoStart;
-  }, [autoStart]);
+  }, [autoStart, initialEntityId]);
 
   useEffect(() => {
     if (!autoStart) return;
-    if (entityData?.id && !isGettingToken && !entityId) {
+    if (entityData?.id && !isGettingToken && !entityId && !initialEntityId) {
       setEntityId(entityData.id);
       setCurrentStep(VerificationStep.TOKEN_PREPARATION);
     }
-  }, [entityData, isGettingToken, entityId, autoStart]);
+  }, [entityData, isGettingToken, entityId, autoStart, initialEntityId]);
 
   useEffect(() => {
     if (!autoStart) return;

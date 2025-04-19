@@ -13,18 +13,44 @@ Amplify.configure({
   },
 });
 
-let notifications: { id: string; message: string; createdAt: number }[] = [];
+// Store the last 20 notifications
+let notifications: {
+  id: string;
+  message: string;
+  createdAt: number;
+}[] = [];
 
 export async function POST(req: NextRequest) {
-  const { message } = await req.json();
-  if (!message) {
-    return NextResponse.json({ error: "Message required" }, { status: 400 });
+  let payload: any;
+  try {
+    payload = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
+
+  let message: string;
+  if (payload && payload.message) {
+    message = payload.message;
+  } else if (payload && typeof payload === "object") {
+    // Try to extract a message from known fields
+    message =
+      payload.message ||
+      payload.eventName ||
+      payload.eventType ||
+      "Notification received";
+  } else {
+    return NextResponse.json(
+      { error: "Invalid notification payload" },
+      { status: 400 }
+    );
+  }
+
   const notification = {
     id: Math.random().toString(36).slice(2),
     message,
     createdAt: Date.now(),
   };
+
   notifications.unshift(notification);
   notifications = notifications.slice(0, 20);
 

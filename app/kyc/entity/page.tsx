@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Card, Alert, Button } from "antd";
 import { useLayout } from "@/app/layoutContext";
 import { motion } from "framer-motion";
@@ -15,7 +16,9 @@ import SecurityInfoCard from "@/components/kyc/SecurityInfoCard";
 
 export default function CreateEntityPage() {
   const { setOptions } = useLayout();
-  const [started, setStarted] = useState(false);
+  const searchParams = useSearchParams();
+  const entityIdFromQuery = searchParams.get("entityId");
+  const [started, setStarted] = useState(!!entityIdFromQuery);
 
   const {
     currentStep,
@@ -29,7 +32,15 @@ export default function CreateEntityPage() {
     handleSubmitted,
     handleComplete,
     handleError,
-  } = useEntityVerification({ autoStart: started });
+  } = useEntityVerification({
+    autoStart: started,
+    entityId: entityIdFromQuery,
+  });
+
+  // If entityIdFromQuery is present, always set started to true
+  useEffect(() => {
+    if (entityIdFromQuery) setStarted(true);
+  }, [entityIdFromQuery]);
 
   // Set page layout options
   useEffect(() => {
@@ -59,7 +70,7 @@ export default function CreateEntityPage() {
           className="shadow-lg rounded-xl overflow-hidden border-0 mb-8"
           styles={{ body: { padding: 0 } }}
         >
-          {/* Show start button if not started */}
+          {/* Show start button if not started and not continuing */}
           {!started && (
             <div className="flex flex-col items-center justify-center py-16">
               <h2 className="text-2xl font-semibold mb-4">
@@ -110,13 +121,14 @@ export default function CreateEntityPage() {
 
               <div className="relative bg-white p-0">
                 {/* Step 1: Create the entity */}
-                {currentStep === VerificationStep.ENTITY_CREATION && (
-                  <EntityCreationStep
-                    isCreating={isCreatingEntity}
-                    onCreateEntity={handleCreateEntity}
-                    error={error}
-                  />
-                )}
+                {currentStep === VerificationStep.ENTITY_CREATION &&
+                  !entityIdFromQuery && (
+                    <EntityCreationStep
+                      isCreating={isCreatingEntity}
+                      onCreateEntity={handleCreateEntity}
+                      error={error}
+                    />
+                  )}
 
                 {/* Step 2: Get the verification token */}
                 {currentStep === VerificationStep.TOKEN_PREPARATION && (
