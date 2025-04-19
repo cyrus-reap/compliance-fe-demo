@@ -2,19 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { Amplify } from "aws-amplify";
 import { events } from "aws-amplify/data";
 
-if (!(global as any)._amplifyConfigured) {
-  Amplify.configure({
-    API: {
-      Events: {
-        endpoint: process.env.NEXT_PUBLIC_APPSYNC_ENDPOINT as string,
-        region: "ap-southeast-1",
-        defaultAuthMode: "apiKey",
-        apiKey: process.env.NEXT_PUBLIC_APPSYNC_API_KEY,
-      },
+Amplify.configure({
+  API: {
+    Events: {
+      endpoint: process.env.NEXT_PUBLIC_APPSYNC_ENDPOINT as string,
+      region: "ap-southeast-1",
+      defaultAuthMode: "apiKey",
+      apiKey: process.env.NEXT_PUBLIC_APPSYNC_API_KEY,
     },
-  });
-  (global as any)._amplifyConfigured = true;
-}
+  },
+});
 
 let notifications: { id: string; message: string; createdAt: number }[] = [];
 
