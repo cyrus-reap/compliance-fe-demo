@@ -64,15 +64,6 @@ export default function DesktopNav({ items, activeKey }: DesktopNavProps) {
           className="hover:opacity-80 transition-opacity"
           onClick={() => window.open("https://reap-ra.readme.io", "_blank")}
         />
-
-        <Avatar
-          size="small"
-          icon={<UserOutlined />}
-          style={{
-            backgroundColor: token.color.lightViolet[700],
-            cursor: "pointer",
-          }}
-        />
       </Space>
     </div>
   );

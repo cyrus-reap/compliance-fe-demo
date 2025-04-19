@@ -24,7 +24,7 @@ export default function NavItem({
         onClick={onClick}
         icon={icon}
         style={{
-          color: isActive ? token.color.yellow[600] : token.color.white,
+          color: isActive ? token.color.green[200] : token.color.white,
         }}
         className="hover:opacity-80 transition-opacity px-3"
       >
@@ -36,7 +36,7 @@ export default function NavItem({
           className="absolute bottom-0 left-0 w-full h-[3px] rounded-t"
           initial={{ opacity: 0, scaleX: 0 }}
           animate={{ opacity: 1, scaleX: 1 }}
-          style={{ backgroundColor: token.color.yellow[600] }}
+          style={{ backgroundColor: token.color.green[200] }}
         />
       )}
     </div>
