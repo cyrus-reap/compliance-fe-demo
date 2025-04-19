@@ -18,8 +18,7 @@ export default function handler(req: NextApiRequest, res: any) {
   if (!res.socket.server.io) {
     console.log("Socket is initializing");
     const io = new IOServer(res.socket.server, {
-      path: "/api/socket_io",
-      addTrailingSlash: false,
+      path: "/api/socket",
       cors: {
         origin: "*",
         methods: ["GET", "POST"],

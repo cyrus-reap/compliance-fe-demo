@@ -54,7 +54,7 @@ export default function AppHeader({
   useEffect(() => {
     fetch("/api/socket").then(() => {
       const socket = io({
-        path: "/api/socket_io",
+        path: "/api/socket",
       });
       socketRef.current = socket;
 
