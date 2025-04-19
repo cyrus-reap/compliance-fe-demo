@@ -28,11 +28,32 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
+  // Compose a more informative message if possible
   let message: string;
-  if (payload && payload.message) {
+  if (
+    payload &&
+    payload.eventName &&
+    payload.entityUuid &&
+    payload.eventType &&
+    payload.channel
+  ) {
+    // Compose a detailed message
+    message = `[${payload.eventType}] Entity ${payload.entityUuid}: ${
+      payload.eventName
+    }${
+      payload.details && payload.details.status
+        ? ` (Status: ${payload.details.status})`
+        : ""
+    }`;
+    if (payload.details && payload.details.slug) {
+      message += ` [${payload.details.slug}]`;
+    }
+    if (payload.message) {
+      message += ` - ${payload.message}`;
+    }
+  } else if (payload && payload.message) {
     message = payload.message;
   } else if (payload && typeof payload === "object") {
-    // Try to extract a message from known fields
     message =
       payload.message ||
       payload.eventName ||

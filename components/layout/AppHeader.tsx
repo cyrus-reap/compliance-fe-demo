@@ -83,7 +83,7 @@ export default function AppHeader({
               message: "Notification",
               description: payload.message,
               icon: <BellOutlined style={{ color: "#faad14", fontSize: 18 }} />,
-              duration: 3,
+              duration: null, // Don't auto close
               placement: "topRight",
             });
           }
@@ -99,7 +99,7 @@ export default function AppHeader({
         subscription.unsubscribe();
       }
     };
-  }, [api]);
+  }, [api, navigationItems, pathname]);
 
   return (
     <AntdApp>
