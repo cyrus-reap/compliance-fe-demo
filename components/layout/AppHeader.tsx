@@ -53,8 +53,9 @@ export default function AppHeader({
 
   useEffect(() => {
     fetch("/api/socket").then(() => {
-      // Connect to the default socket.io endpoint ("/socket.io")
-      const socket = io(); // No path option needed unless you customized it
+      const socket = io({
+        path: "/api/socket_io",
+      });
       socketRef.current = socket;
 
       socket.on(
