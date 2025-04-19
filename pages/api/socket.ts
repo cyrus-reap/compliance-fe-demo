@@ -26,7 +26,7 @@ export default function handler(req: NextApiRequest, res: any) {
       },
     });
     res.socket.server.io = io;
-    globalThis.io = io; // <-- Make io globally accessible
+    globalThis.io = io;
 
     io.on("connection", (socket) => {
       // Listen for custom events if needed
