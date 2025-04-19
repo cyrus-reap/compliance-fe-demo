@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from "react";
 import { Spin, Typography, Button } from "antd";
 import { LoadingOutlined, ReloadOutlined } from "@ant-design/icons";
 import { token } from "@/app/theme";
-import { EntityType } from "@/types";
 
 const { Text } = Typography;
 
@@ -17,10 +16,8 @@ export default function EntityCreationStep({
   onCreateEntity,
   error = null,
 }: EntityCreationStepProps) {
-  // Use a ref to track if we've already initiated entity creation
   const hasTriggeredRef = useRef(false);
 
-  // Trigger entity creation once when component mounts
   useEffect(() => {
     if (!isCreating && !error && !hasTriggeredRef.current) {
       hasTriggeredRef.current = true;
@@ -28,7 +25,6 @@ export default function EntityCreationStep({
     }
   }, [onCreateEntity, isCreating, error]);
 
-  // Reset ref when unmounting to ensure it works if component remounts
   useEffect(() => {
     return () => {
       hasTriggeredRef.current = false;
