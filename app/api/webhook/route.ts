@@ -9,7 +9,7 @@ if (!(global as any)._amplifyConfigured) {
         endpoint: process.env.NEXT_PUBLIC_APPSYNC_ENDPOINT as string,
         region: "ap-southeast-1",
         defaultAuthMode: "apiKey",
-        apiKey: process.env.APPSYNC_API_KEY,
+        apiKey: process.env.NEXT_PUBLIC_APPSYNC_API_KEY,
       },
     },
   });
