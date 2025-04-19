@@ -1,15 +1,16 @@
 import { useRouter, usePathname } from "next/navigation";
 import { token } from "@/app/theme";
 import { LayoutOptions } from "@/app/layoutContext";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Logo from "./header/Logo";
 import BackButton from "./header/BackButton";
 import DesktopNav from "./header/DesktopNav";
 import MobileNav from "./header/MobileNav";
 import FeatureTag from "./header/FeatureTag";
-import { io, Socket } from "socket.io-client";
 import { notification, App as AntdApp } from "antd";
 import { BellOutlined } from "@ant-design/icons";
+import { Amplify } from "aws-amplify";
+import { events } from "aws-amplify/data";
 
 interface AppHeaderProps {
   options: LayoutOptions;
@@ -21,6 +22,18 @@ interface AppHeaderProps {
   }[];
 }
 
+Amplify.configure({
+  API: {
+    Events: {
+      endpoint:
+        "https://l2tjsnx3kjg63euedtbqjj6szm.appsync-api.ap-southeast-1.amazonaws.com/event",
+      region: "ap-southeast-1",
+      defaultAuthMode: "apiKey",
+      apiKey: process.env.NEXT_PUBLIC_APPSYNC_API_KEY,
+    },
+  },
+});
+
 export default function AppHeader({
   options,
   navigationItems,
@@ -31,9 +44,6 @@ export default function AppHeader({
   const [notifications, setNotifications] = useState<
     { message: string; createdAt: number }[]
   >([]);
-  const socketRef = useRef<Socket | null>(null);
-
-  // Use AntdApp's notification context holder
   const [api, contextHolder] = notification.useNotification();
 
   useEffect(() => {
@@ -52,36 +62,44 @@ export default function AppHeader({
   }, [pathname, navigationItems]);
 
   useEffect(() => {
-    fetch("/api/socket").then(() => {
-      const socket = io({
-        path: "/api/socket",
+    // Subscribe to AppSync events using the correct connect/subscribe API
+    let channel: any;
+    let subscription: { unsubscribe: () => void } | undefined;
+
+    (async () => {
+      channel = await events.connect("/default/notifications");
+      subscription = channel.subscribe({
+        next: (data: any) => {
+          // data.value should contain your notification payload
+          const payload = data.event;
+
+          if (payload && payload.message && payload.createdAt) {
+            setNotifications((prev) =>
+              [
+                { message: payload.message, createdAt: payload.createdAt },
+                ...prev,
+              ].slice(0, 20)
+            );
+            api.open({
+              message: "Notification",
+              description: payload.message,
+              icon: <BellOutlined style={{ color: "#faad14", fontSize: 18 }} />,
+              duration: 3,
+              placement: "topRight",
+            });
+          }
+        },
+        error: (err: any) => {
+          console.error("AppSync subscription error", err);
+        },
       });
-      socketRef.current = socket;
+    })();
 
-      socket.on(
-        "notification",
-        (data: { message: string; createdAt: number }) => {
-          setNotifications((prev) =>
-            [
-              { message: data.message, createdAt: data.createdAt },
-              ...prev,
-            ].slice(0, 20)
-          );
-
-          api.open({
-            message: "Notification",
-            description: data.message,
-            icon: <BellOutlined style={{ color: "#faad14", fontSize: 18 }} />,
-            duration: 3,
-            placement: "topRight",
-          });
-        }
-      );
-
-      return () => {
-        socket.disconnect();
-      };
-    });
+    return () => {
+      if (subscription && typeof subscription.unsubscribe === "function") {
+        subscription.unsubscribe();
+      }
+    };
   }, [api]);
 
   return (
