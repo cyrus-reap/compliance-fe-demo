@@ -17,9 +17,14 @@ interface NavigationItem {
 interface DesktopNavProps {
   items: NavigationItem[];
   activeKey: string;
+  notificationCount?: number;
 }
 
-export default function DesktopNav({ items, activeKey }: DesktopNavProps) {
+export default function DesktopNav({
+  items,
+  activeKey,
+  notificationCount = 0,
+}: DesktopNavProps) {
   return (
     <div className="hidden md:flex items-center">
       <nav className="flex mr-3">
@@ -42,7 +47,7 @@ export default function DesktopNav({ items, activeKey }: DesktopNavProps) {
       </nav>
 
       <Space size="small">
-        <Badge count={0} size="small">
+        <Badge count={notificationCount} size="small">
           <Button
             type="text"
             shape="circle"
