@@ -2,16 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { Amplify } from "aws-amplify";
 import { events } from "aws-amplify/data";
 
-// Configure Amplify for AppSync (only once)
 if (!(global as any)._amplifyConfigured) {
   Amplify.configure({
     API: {
       Events: {
-        endpoint:
-          "https://l2tjsnx3kjg63euedtbqjj6szm.appsync-api.ap-southeast-1.amazonaws.com/event",
+        endpoint: process.env.NEXT_PUBLIC_APPSYNC_ENDPOINT as string,
         region: "ap-southeast-1",
         defaultAuthMode: "apiKey",
-        apiKey: process.env.NEXT_PUBLIC_APPSYNC_API_KEY,
+        apiKey: process.env.APPSYNC_API_KEY,
       },
     },
   });
@@ -33,14 +31,14 @@ export async function POST(req: NextRequest) {
   notifications.unshift(notification);
   notifications = notifications.slice(0, 20);
 
-  // Send to AppSync event endpoint
   try {
     await events.post("/default/notifications", {
       message: notification.message,
       createdAt: notification.createdAt,
     });
   } catch (err) {
-    // Ignore if AppSync is not available
+    // Ignore if ws-server.js is not available (e.g., in serverless/prod)
+    console.error("Error posting notification to AppSync:", err);
   }
 
   return NextResponse.json({ success: true });

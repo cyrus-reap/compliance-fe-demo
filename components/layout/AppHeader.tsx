@@ -25,11 +25,10 @@ interface AppHeaderProps {
 Amplify.configure({
   API: {
     Events: {
-      endpoint:
-        "https://l2tjsnx3kjg63euedtbqjj6szm.appsync-api.ap-southeast-1.amazonaws.com/event",
+      endpoint: process.env.NEXT_PUBLIC_APPSYNC_ENDPOINT as string,
       region: "ap-southeast-1",
       defaultAuthMode: "apiKey",
-      apiKey: process.env.NEXT_PUBLIC_APPSYNC_API_KEY,
+      apiKey: process.env.NEXT_PUBLIC_APPSYNC_API_KEY, // For the sake of demo only
     },
   },
 });
@@ -146,4 +145,13 @@ export default function AppHeader({
       </header>
     </AntdApp>
   );
+}
+
+export async function getServerSideProps() {
+  // Fetch data from an external API
+  const res = await fetch("https://api.example.com/data");
+  const data = await res.json();
+
+  // Pass data to the page via props
+  return { props: { data } };
 }
