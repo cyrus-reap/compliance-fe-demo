@@ -13,7 +13,6 @@ Amplify.configure({
   },
 });
 
-// Store the last 20 notifications
 let notifications: {
   id: string;
   message: string;
@@ -28,7 +27,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  // Compose a more informative message if possible
   let message: string;
   if (
     payload &&
@@ -37,7 +35,6 @@ export async function POST(req: NextRequest) {
     payload.eventType &&
     payload.channel
   ) {
-    // Compose a detailed message
     message = `[${payload.eventType}] Entity ${payload.entityUuid}: ${
       payload.eventName
     }${
