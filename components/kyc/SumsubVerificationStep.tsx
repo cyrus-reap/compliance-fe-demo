@@ -41,8 +41,7 @@ export default function SumsubVerificationStep({
           if (
             payload &&
             entityId &&
-            (payload.reviewStatus === SumSubReviewStatus.APPROVED ||
-              payload.reviewStatus === SumSubReviewStatus.COMPLETED)
+            payload.reviewStatus === SumSubReviewStatus.APPROVED
           ) {
             onComplete(entityId);
           }
