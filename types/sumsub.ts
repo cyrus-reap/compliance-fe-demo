@@ -23,12 +23,12 @@ export interface SumSubApplicant {
 
 // Add enum for review statuses
 export enum SumSubReviewStatus {
+  INIT = "init",
   PENDING = "pending",
+  PRECHECKED = "prechecked",
+  QUEUED = "queued",
   COMPLETED = "completed",
-  APPROVED = "approved",
-  REJECTED = "rejected",
-  ON_HOLD = "on_hold",
-  RETRY = "retry",
+  ON_HOLD = "onHold",
 }
 
 export interface SumSubMessage {
