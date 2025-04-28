@@ -164,9 +164,9 @@ export default function EntityDetails({ data, onBack }: EntityDetailsProps) {
               const showContinueVerification =
                 req.requirement?.name === "Individual Verification Identity" &&
                 req.status?.toUpperCase() === "PENDING";
-              const showResetKyc =
-                req.requirement?.name === "Individual Verification Identity" &&
-                req.status?.toUpperCase() === "REJECTED";
+              // const showResetKyc =
+              //   req.requirement?.name === "Individual Verification Identity" &&
+              //   req.status?.toUpperCase() === "REJECTED";
               return (
                 <Panel
                   key={index.toString()}
@@ -220,7 +220,7 @@ export default function EntityDetails({ data, onBack }: EntityDetailsProps) {
                       </div>
                     </>
                   )}
-                  {showResetKyc && (
+                  {/* {showResetKyc && (
                     <>
                       <Divider className="!my-4" />
                       <div className="flex justify-end">
@@ -239,7 +239,7 @@ export default function EntityDetails({ data, onBack }: EntityDetailsProps) {
                         </Tooltip>
                       </div>
                     </>
-                  )}
+                  )} */}
                 </Panel>
               );
             })}
