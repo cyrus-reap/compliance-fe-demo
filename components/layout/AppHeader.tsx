@@ -89,7 +89,7 @@ export default function AppHeader({
           }
         },
         error: (err: any) => {
-          console.error("AppSync subscription error", err);
+          // console.error("AppSync subscription error", err);
         },
       });
     })();
