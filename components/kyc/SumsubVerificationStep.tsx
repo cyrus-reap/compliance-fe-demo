@@ -34,8 +34,6 @@ export default function SumsubVerificationStep({
   // Message handler for all Sumsub events
   const messageHandler = useCallback(
     (type: string, payload: any) => {
-      console.log(`[SumSub] Message: ${type}`, payload);
-
       switch (type) {
         case "idCheck.onApplicantStatusChanged":
           if (
