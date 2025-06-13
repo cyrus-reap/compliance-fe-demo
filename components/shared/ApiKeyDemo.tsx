@@ -16,7 +16,6 @@ import {
   CheckCircleOutlined,
 } from "@ant-design/icons";
 import { useApiKey } from "@/contexts/ApiKeyContext";
-import { useGetFeaturesHook } from "@/hooks/useGetFeaturesHook";
 import { token } from "@/app/theme";
 
 const { Title, Text, Paragraph } = Typography;
@@ -27,47 +26,96 @@ export default function ApiKeyDemo() {
     success: boolean;
     message: string;
     keyType: string;
+    details?: any;
   } | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Test API call with current configuration
   const testApiCall = async () => {
+    setIsLoading(true);
+    setTestResult(null);
+
     try {
       const currentKey = getApiKey();
       const keyType = config.useCustomKey ? "Custom" : "System";
 
-      // Make a simple API call to test connectivity
-      const response = await fetch("/api/test", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          apiKey: currentKey,
-          testType: "connectivity",
-        }),
-      });
-
-      if (response.ok) {
-        setTestResult({
-          success: true,
-          message: "API call successful!",
-          keyType,
-        });
-      } else {
+      // Validate configuration before testing
+      if (config.useCustomKey && !currentKey) {
         setTestResult({
           success: false,
-          message: "API call failed - check your key configuration",
+          message:
+            "No custom API key provided. Please configure a custom key first.",
           keyType,
         });
+        return;
       }
+
+      if (!config.useCustomKey && !process.env.NEXT_PUBLIC_COMPLIANCE_API_URL) {
+        setTestResult({
+          success: false,
+          message: "API URL not configured. Check environment variables.",
+          keyType,
+        });
+        return;
+      }
+
+      // Test with a direct client-side API call
+      const apiUrl = process.env.NEXT_PUBLIC_COMPLIANCE_API_URL;
+      if (!apiUrl) {
+        throw new Error("API URL not configured");
+      }
+
+      const response = await fetch(`${apiUrl}/features`, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "x-reap-api-key": currentKey || "",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const result = await response.json();
+
+      setTestResult({
+        success: true,
+        message: `Successfully fetched ${result.items?.length || 0} features`,
+        keyType,
+        details: {
+          itemCount: result.items?.length || 0,
+          hasMetadata: !!result.meta,
+          firstFeature: result.items?.[0]?.name || "No features available",
+          apiUrl:
+            process.env.NEXT_PUBLIC_COMPLIANCE_API_URL || "Not configured",
+        },
+      });
     } catch (error) {
+      console.error("API test failed:", error);
+      let errorMessage = "Unknown error";
+
+      if (error instanceof Error) {
+        errorMessage = error.message;
+        // Provide more specific error messages
+        if (errorMessage.includes("401")) {
+          errorMessage = "Unauthorized - Invalid API key";
+        } else if (errorMessage.includes("403")) {
+          errorMessage = "Forbidden - API key lacks required permissions";
+        } else if (errorMessage.includes("404")) {
+          errorMessage = "Not found - Check API endpoint configuration";
+        } else if (errorMessage.includes("Network Error")) {
+          errorMessage = "Network error - Check API URL and connectivity";
+        }
+      }
+
       setTestResult({
         success: false,
-        message: `Error: ${
-          error instanceof Error ? error.message : "Unknown error"
-        }`,
+        message: `API call failed: ${errorMessage}`,
         keyType: config.useCustomKey ? "Custom" : "System",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -109,12 +157,37 @@ export default function ApiKeyDemo() {
                 </Text>
               </div>
 
+              <div className="flex justify-between items-center">
+                <Text strong>API URL:</Text>
+                <Text code className="text-gray-600">
+                  {process.env.NEXT_PUBLIC_COMPLIANCE_API_URL ||
+                    "Not configured"}
+                </Text>
+              </div>
+
               {config.useCustomKey && config.customKey && (
                 <div className="flex justify-between items-center">
                   <Text strong>Key Preview:</Text>
                   <Text code className="text-gray-600">
                     {config.customKey.substring(0, 8)}...
                     {config.customKey.slice(-4)}
+                  </Text>
+                </div>
+              )}
+
+              {!config.useCustomKey && (
+                <div className="flex justify-between items-center">
+                  <Text strong>System Key Available:</Text>
+                  <Text
+                    className={
+                      process.env.COMPLIANCE_API_KEY
+                        ? "text-green-600"
+                        : "text-red-600"
+                    }
+                  >
+                    {process.env.COMPLIANCE_API_KEY
+                      ? "Yes"
+                      : "No (server-side only)"}
                   </Text>
                 </div>
               )}
@@ -138,16 +211,38 @@ export default function ApiKeyDemo() {
               type="primary"
               icon={<RestOutlined />}
               onClick={testApiCall}
-              loading={false}
+              loading={isLoading}
               disabled={!config.isValid}
             >
-              Test API Call
+              Test API Call (Fetch Features)
             </Button>
 
             {testResult && (
               <Alert
                 message={`Test Result (${testResult.keyType} Key)`}
-                description={testResult.message}
+                description={
+                  <div>
+                    <p>{testResult.message}</p>
+                    {testResult.success && testResult.details && (
+                      <div className="mt-2 text-sm">
+                        <p>
+                          <strong>Details:</strong>
+                        </p>
+                        <ul>
+                          <li>Items fetched: {testResult.details.itemCount}</li>
+                          <li>
+                            Has metadata:{" "}
+                            {testResult.details.hasMetadata ? "Yes" : "No"}
+                          </li>
+                          <li>
+                            First feature: {testResult.details.firstFeature}
+                          </li>
+                          <li>API URL: {testResult.details.apiUrl}</li>
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                }
                 type={testResult.success ? "success" : "error"}
                 showIcon
                 icon={testResult.success ? <CheckCircleOutlined /> : undefined}

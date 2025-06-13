@@ -29,16 +29,38 @@ export default function SecurityInfoCard() {
             <SettingOutlined style={{ color: token.color.lightBlue[600] }} />
             API Configuration
           </Title>
-          <Paragraph className="text-gray-600 mb-2">
-            Current API Configuration:{" "}
-            <span
-              className={`font-semibold ${
-                config.useCustomKey ? "text-green-600" : "text-blue-600"
-              }`}
+          <div className="flex items-center justify-between mb-2">
+            <Paragraph className="text-gray-600 mb-0">
+              Current API Configuration:{" "}
+              <span
+                className={`font-semibold ${
+                  config.useCustomKey ? "text-green-600" : "text-blue-600"
+                }`}
+              >
+                {config.useCustomKey ? "Custom API Key" : "System API Key"}
+              </span>
+            </Paragraph>
+            <Button
+              type="text"
+              size="small"
+              icon={<SettingOutlined />}
+              className="text-gray-600 hover:text-blue-600"
+              onClick={() => {
+                // Find and click the API key manager button in the header
+                const apiKeyButton = document.querySelector(
+                  '[data-testid="api-key-manager-trigger"]'
+                ) as HTMLElement;
+                if (apiKeyButton) {
+                  apiKeyButton.click();
+                } else {
+                  // Fallback: dispatch a custom event that the ApiKeyManager can listen to
+                  window.dispatchEvent(new CustomEvent("openApiKeyManager"));
+                }
+              }}
             >
-              {config.useCustomKey ? "Custom API Key" : "System API Key"}
-            </span>
-          </Paragraph>
+              Configure
+            </Button>
+          </div>
           {config.useCustomKey && (
             <Paragraph className="text-sm text-yellow-600 mb-0">
               ⚠️ You are using a custom API key for testing. Make sure it's a

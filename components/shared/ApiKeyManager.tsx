@@ -10,7 +10,7 @@
 
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   Switch,
   Input,
@@ -53,6 +53,14 @@ export default function ApiKeyManager({
     isValid: boolean;
     warning?: string;
   }>({ isValid: config.isValid });
+
+  // Listen for custom event to open modal
+  useEffect(() => {
+    const handleOpenModal = () => setIsModalVisible(true);
+    window.addEventListener("openApiKeyManager", handleOpenModal);
+    return () =>
+      window.removeEventListener("openApiKeyManager", handleOpenModal);
+  }, []);
 
   // Handle toggle switch change
   const handleToggleChange = useCallback(
@@ -118,6 +126,7 @@ export default function ApiKeyManager({
             shape="circle"
             icon={<SettingOutlined />}
             onClick={() => setIsModalVisible(true)}
+            data-testid="api-key-manager-trigger"
             style={{
               color: config.useCustomKey
                 ? token.color.green[600]
@@ -140,6 +149,14 @@ export default function ApiKeyManager({
           footer={[
             <Button key="cancel" onClick={handleCancel}>
               Cancel
+            </Button>,
+            <Button
+              key="test"
+              onClick={() => {
+                window.open("/api-key-test", "_blank");
+              }}
+            >
+              Test API Functionality
             </Button>,
             config.useCustomKey && (
               <Button key="remove" danger onClick={handleRemoveKey}>
