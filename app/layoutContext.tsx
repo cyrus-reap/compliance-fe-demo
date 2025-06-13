@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, ReactNode } from "react";
+import { ApiKeyProvider } from "@/contexts/ApiKeyContext";
 
 export interface LayoutOptions {
   title?: string;
@@ -23,9 +24,11 @@ export const LayoutProvider = ({ children }: { children: ReactNode }) => {
   });
 
   return (
-    <LayoutContext.Provider value={{ options, setOptions }}>
-      {children}
-    </LayoutContext.Provider>
+    <ApiKeyProvider>
+      <LayoutContext.Provider value={{ options, setOptions }}>
+        {children}
+      </LayoutContext.Provider>
+    </ApiKeyProvider>
   );
 };
 
