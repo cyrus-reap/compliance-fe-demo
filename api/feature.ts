@@ -8,12 +8,14 @@ import { GetAllFeaturesForUserType, PaginationType } from "@/types";
  *
  * @param {number} page - The current page number.
  * @param {number} limit - The number of features per page.
+ * @param {string} [apiKey] - Optional API key. Falls back to system key if not provided.
  * @returns {Promise<{ items: GetAllFeaturesForUserType[]; meta: PaginationType }>} - The list of features and pagination metadata.
  * @throws {Error} - Throws an error if the API request fails.
  */
 export const fetchFeatures = async (
   page: number,
-  limit: number
+  limit: number,
+  apiKey?: string
 ): Promise<{ items: GetAllFeaturesForUserType[]; meta: PaginationType }> => {
   try {
     const response = await axios.get<{
@@ -22,7 +24,7 @@ export const fetchFeatures = async (
     }>(`${process.env.NEXT_PUBLIC_COMPLIANCE_API_URL}/features`, {
       headers: {
         accept: "application/json",
-        "x-reap-api-key": process.env.COMPLIANCE_API_KEY as string,
+        "x-reap-api-key": apiKey || (process.env.COMPLIANCE_API_KEY as string),
       },
       params: {
         page,

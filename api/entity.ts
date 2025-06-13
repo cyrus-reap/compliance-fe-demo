@@ -15,7 +15,10 @@ import {
  * @returns {Promise<any>} - The created entity's response.
  * @throws {Error} - Throws an error if the API request fails.
  */
-export const createEntity = async (data: CreateEntityType): Promise<any> => {
+export const createEntity = async (
+  data: CreateEntityType,
+  apiKey?: string
+): Promise<any> => {
   try {
     const response = await axios.post(
       `${process.env.NEXT_PUBLIC_COMPLIANCE_API_URL}/entity`,
@@ -23,7 +26,8 @@ export const createEntity = async (data: CreateEntityType): Promise<any> => {
       {
         headers: {
           "Content-Type": "application/json",
-          "x-reap-api-key": process.env.COMPLIANCE_API_KEY as string,
+          "x-reap-api-key":
+            apiKey || (process.env.COMPLIANCE_API_KEY as string),
         },
       }
     );
@@ -38,12 +42,14 @@ export const createEntity = async (data: CreateEntityType): Promise<any> => {
  *
  * @param {number} page - The current page number.
  * @param {number} limit - The number of items per page.
+ * @param {string} [apiKey] - Optional API key. Falls back to system key if not provided.
  * @returns {Promise<{ items: GetAllEntitiesForUserType[]; meta: PaginationType }>} - The paginated list of entities and metadata.
  * @throws {Error} - Throws an error if the API request fails.
  */
 export const fetchEntities = async (
   page: number,
-  limit: number
+  limit: number,
+  apiKey?: string
 ): Promise<{ items: GetAllEntitiesForUserType[]; meta: PaginationType }> => {
   try {
     const response = await axios.get(
@@ -52,7 +58,8 @@ export const fetchEntities = async (
         params: { page, limit },
         headers: {
           accept: "application/json",
-          "x-reap-api-key": process.env.COMPLIANCE_API_KEY as string,
+          "x-reap-api-key":
+            apiKey || (process.env.COMPLIANCE_API_KEY as string),
         },
       }
     );
@@ -68,16 +75,21 @@ export const fetchEntities = async (
  * Deletes an entity by its ID.
  *
  * @param {string} entityId - The ID of the entity to be deleted.
+ * @param {string} [apiKey] - Optional API key. Falls back to system key if not provided.
  * @returns {Promise<any>} - The response after the entity is deleted.
  * @throws {Error} - Throws an error if the API request fails.
  */
-export const deleteEntity = async (entityId: string): Promise<any> => {
+export const deleteEntity = async (
+  entityId: string,
+  apiKey?: string
+): Promise<any> => {
   try {
     const response = await axios.delete(
       `${process.env.NEXT_PUBLIC_COMPLIANCE_API_URL}/entity/${entityId}`,
       {
         headers: {
-          "x-reap-api-key": process.env.COMPLIANCE_API_KEY as string,
+          "x-reap-api-key":
+            apiKey || (process.env.COMPLIANCE_API_KEY as string),
         },
       }
     );
@@ -91,17 +103,20 @@ export const deleteEntity = async (entityId: string): Promise<any> => {
  * Fetch entity details from the API.
  *
  * @param entityId - ID of the entity.
+ * @param {string} [apiKey] - Optional API key. Falls back to system key if not provided.
  * @returns EntityDetails
  */
 export const getEntityDetails = async (
-  entityId: string
+  entityId: string,
+  apiKey?: string
 ): Promise<GetEntityDetailsType> => {
   try {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_COMPLIANCE_API_URL}/entity/${entityId}`,
       {
         headers: {
-          "x-reap-api-key": process.env.COMPLIANCE_API_KEY as string,
+          "x-reap-api-key":
+            apiKey || (process.env.COMPLIANCE_API_KEY as string),
         },
       }
     );
