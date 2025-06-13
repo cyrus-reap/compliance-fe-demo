@@ -6,6 +6,7 @@ import {
 } from "@ant-design/icons";
 import { token } from "@/app/theme";
 import NavItem from "./NavItem";
+import ApiKeyManager from "@/components/shared/ApiKeyManager";
 
 interface NavigationItem {
   key: string;
@@ -47,6 +48,9 @@ export default function DesktopNav({
       </nav>
 
       <Space size="small">
+        {/* API Key Manager - allows users to optionally use their own API key */}
+        <ApiKeyManager compact />
+
         <Badge count={notificationCount} size="small">
           <Button
             type="text"

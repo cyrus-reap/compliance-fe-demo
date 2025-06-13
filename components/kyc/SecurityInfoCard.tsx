@@ -1,10 +1,13 @@
 import { Card, Typography, Space, Button } from "antd";
-import { LockOutlined } from "@ant-design/icons";
+import { LockOutlined, SettingOutlined } from "@ant-design/icons";
 import { token } from "@/app/theme";
+import { useApiKey } from "@/contexts/ApiKeyContext";
 
 const { Title, Paragraph } = Typography;
 
 export default function SecurityInfoCard() {
+  const { config } = useApiKey();
+
   return (
     <Card className="shadow-md rounded-xl bg-gray-50 border-0">
       <Space direction="vertical" size="middle" className="w-full">
@@ -18,6 +21,30 @@ export default function SecurityInfoCard() {
             verification service. Your personal data is encrypted and processed
             in accordance with our privacy policy.
           </Paragraph>
+        </div>
+
+        {/* API Key Status Info */}
+        <div className="bg-white p-4 rounded-lg border border-gray-100">
+          <Title level={5} className="m-0 mb-2 flex items-center gap-2">
+            <SettingOutlined style={{ color: token.color.lightBlue[600] }} />
+            API Configuration
+          </Title>
+          <Paragraph className="text-gray-600 mb-2">
+            Current API Configuration:{" "}
+            <span
+              className={`font-semibold ${
+                config.useCustomKey ? "text-green-600" : "text-blue-600"
+              }`}
+            >
+              {config.useCustomKey ? "Custom API Key" : "System API Key"}
+            </span>
+          </Paragraph>
+          {config.useCustomKey && (
+            <Paragraph className="text-sm text-yellow-600 mb-0">
+              ⚠️ You are using a custom API key for testing. Make sure it's a
+              development/test key only.
+            </Paragraph>
+          )}
         </div>
 
         <div className="bg-white p-4 rounded-lg border border-gray-100">
