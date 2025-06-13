@@ -7,9 +7,13 @@ import { KycParams, KycResponse } from "@/types";
  * Fetches the KYC web_href for a specific entity or entity member.
  *
  * @param {KycParams} params - The parameters for the KYC process.
+ * @param {string} [apiKey] - Optional API key. Falls back to system key if not provided.
  * @returns {Promise<KycResponse>} - The response containing the `web_href`.
  */
-export const fetchKycLink = async (params: KycParams): Promise<KycResponse> => {
+export const fetchKycLink = async (
+  params: KycParams,
+  apiKey?: string
+): Promise<KycResponse> => {
   const { entityId, memberId } = params;
 
   try {
@@ -21,7 +25,8 @@ export const fetchKycLink = async (params: KycParams): Promise<KycResponse> => {
       {
         headers: {
           "Content-Type": "application/json",
-          "x-reap-api-key": process.env.COMPLIANCE_API_KEY as string,
+          "x-reap-api-key":
+            apiKey || (process.env.COMPLIANCE_API_KEY as string),
         },
       }
     );

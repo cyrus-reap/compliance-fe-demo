@@ -7,11 +7,13 @@ import { RequirementsListType } from "@/types";
  * Fetches the requirements for a specific feature.
  *
  * @param {string} featureId - The ID of the feature to fetch requirements for.
+ * @param {string} [apiKey] - Optional API key. Falls back to system key if not provided.
  * @returns {Promise<{ items: RequirementsListType }>} - The feature requirements data.
  * @throws {Error} - Throws an error if the API request fails.
  */
 export const fetchFeatureRequirements = async (
-  featureId?: string
+  featureId?: string,
+  apiKey?: string
 ): Promise<{ items: RequirementsListType }> => {
   if (!featureId) throw new Error("Feature ID is required");
 
@@ -21,7 +23,8 @@ export const fetchFeatureRequirements = async (
       {
         headers: {
           accept: "application/json",
-          "x-reap-api-key": process.env.COMPLIANCE_API_KEY as string,
+          "x-reap-api-key":
+            apiKey || (process.env.COMPLIANCE_API_KEY as string),
         },
       }
     );
