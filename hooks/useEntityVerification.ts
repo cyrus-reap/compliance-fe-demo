@@ -53,7 +53,6 @@ export const useEntityVerification = (options?: {
     createEntity({
       externalId,
       type: EntityType.INDIVIDUAL,
-      requirements: [],
     });
   }, [createEntity, autoStart]);
 

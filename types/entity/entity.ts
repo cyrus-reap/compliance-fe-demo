@@ -12,10 +12,6 @@ export interface CreateEntityResponseType {
 
 export interface CreateEntityType {
   externalId: string;
-  requirements?: {
-    requirementSlug: string;
-    value: string;
-  }[];
   type: EntityType;
 }
 
