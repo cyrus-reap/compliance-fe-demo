@@ -5,7 +5,6 @@ import {
   RightCircleOutlined,
   FileTextOutlined,
   CheckCircleOutlined,
-  InfoCircleOutlined,
 } from "@ant-design/icons";
 import { token } from "@/app/theme";
 import { motion } from "framer-motion";
@@ -23,24 +22,13 @@ export default function Hero() {
 
   return (
     <div
-      className="py-20 relative overflow-hidden"
+      className="py-24 relative"
       style={{
-        background: `linear-gradient(90deg, ${token.color.darkViolet} 0%, ${token.color.darkPurple} 100%)`,
+        backgroundColor: token.color.darkViolet,
         color: token.color.white,
       }}
     >
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden opacity-10 pointer-events-none">
-        <div
-          className="absolute top-0 left-0 w-64 h-64 rounded-full filter blur-3xl"
-          style={{ backgroundColor: token.color.purple[200] }}
-        ></div>
-        <div
-          className="absolute bottom-0 right-0 w-96 h-96 rounded-full filter blur-3xl"
-          style={{ backgroundColor: token.color.lightBlue[200] }}
-        ></div>
-      </div>
-
-      <div className="container mx-auto px-6 max-w-6xl relative z-10">
+      <div className="container mx-auto px-6 max-w-6xl relative">
         <Row gutter={[48, 48]} align="middle">
           <Col xs={24} md={14}>
             <motion.div
@@ -48,164 +36,112 @@ export default function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <Badge.Ribbon
-                text="SumSub Integration"
-                color={token.color.green[600]}
-                style={{
-                  fontSize: token.font.size.sm,
-                  fontWeight: 600,
-                  background: token.color.green[600],
-                }}
-              >
-                <div className="mb-8">
-                  <Text
-                    className="font-semibold mb-2 block"
-                    style={{
-                      color: token.color.lightBlue[200],
-                      fontSize: token.font.size.sm,
-                      letterSpacing: token.font.tracking.tight,
-                    }}
-                  >
-                    REAP COMPLIANCE API
-                  </Text>
-                  <h1
-                    className="font-bold mb-2 leading-tight"
-                    style={{
-                      color: token.color.white,
-                      fontSize: token.font.size["4xl"],
-                      lineHeight: token.font.leading[10],
-                    }}
-                  >
-                    KYC Verification at Reap
-                  </h1>
-                  <Paragraph
-                    className="mb-2 max-w-xl"
-                    style={{
-                      color: token.color.lightBlue[200],
-                      fontSize: token.font.size.lg,
-                      fontWeight: 600,
-                    }}
-                  >
-                    Now powered by{" "}
-                    <span style={{ color: token.color.green[400] }}>
-                      SumSub
-                    </span>{" "}
-                    for faster, more robust, and scalable compliance.
-                  </Paragraph>
-                  <Paragraph
-                    className="mb-6 max-w-xl"
-                    style={{
-                      color: token.color.grey[300],
-                      fontSize: token.font.size.lg,
-                      lineHeight: token.font.leading[7],
-                    }}
-                  >
-                    Experience the next generation of KYC: automated, global,
-                    and developer-friendly. Modular architecture, webhook
-                    support, and real-time updates for seamless integration.
-                  </Paragraph>
-
-                  <Space direction="vertical" className="w-full mb-8">
-                    {keyFeatures.map((feature, index) => (
-                      <motion.div
-                        key={index}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{
-                          duration: 0.4,
-                          delay: 0.2 + index * 0.1,
-                        }}
-                        className="flex items-center"
-                      >
-                        <CheckCircleOutlined
-                          className="mr-2"
-                          style={{
-                            color: token.color.green[400],
-                            fontSize: token.font.size.lg,
-                          }}
-                        />
-                        <Text
-                          style={{
-                            color: token.color.grey[300],
-                            fontSize: token.font.size.base,
-                          }}
-                        >
-                          {feature}
-                        </Text>
-                      </motion.div>
-                    ))}
-                  </Space>
-                </div>
-              </Badge.Ribbon>
-
-              <Space size="middle" className="mt-6">
-                <Link href="/kyc/entity">
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <Button
-                      type="primary"
-                      size="large"
-                      icon={<RightCircleOutlined />}
-                      className="shadow-lg"
-                      style={{
-                        background: `linear-gradient(90deg, ${token.color.lightViolet[700]}, ${token.color.lightBlue[700]})`,
-                        borderColor: token.color.lightViolet[700],
-                        height: "48px",
-                        padding: "0 28px",
-                        fontWeight: 700,
-                        fontSize: token.font.size.lg,
-                        letterSpacing: token.font.tracking.tight,
-                        boxShadow: `0 4px 24px 0 ${token.color.lightViolet[800]}33`,
-                      }}
-                    >
-                      Start KYC Verification
-                    </Button>
-                  </motion.div>
-                </Link>
-                <Link href="/kyc/features">
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <Button
-                      size="large"
-                      ghost
-                      className="border-2 text-white hover:text-white h-[48px] shadow-lg"
-                      style={{
-                        borderColor: token.color.white,
-                        color: token.color.white,
-                        fontWeight: 600,
-                        fontSize: token.font.size.lg,
-                        padding: "0 24px",
-                        background: "transparent",
-                      }}
-                    >
-                      Explore Features
-                    </Button>
-                  </motion.div>
-                </Link>
-                <a
-                  href="https://www.notion.so/KYC-Evolution-at-Reap-New-SumSub-Integration-1d77e193475080b28e3ac04555fd7b2e?pvs=21"
-                  target="_blank"
-                  rel="noopener noreferrer"
+              <div className="mb-8">
+                <Text
+                  className="font-medium mb-3 block tracking-wide"
+                  style={{
+                    color: token.color.lightBlue[200],
+                    fontSize: "14px",
+                    textTransform: "uppercase",
+                  }}
                 >
+                  REAP COMPLIANCE API
+                </Text>
+                <h1
+                  className="font-bold mb-4 leading-tight"
+                  style={{
+                    color: token.color.white,
+                    fontSize: "48px",
+                    lineHeight: "1.1",
+                  }}
+                >
+                  KYC Verification Platform
+                </h1>
+                <Paragraph
+                  className="mb-6 max-w-xl"
+                  style={{
+                    color: token.color.grey[300],
+                    fontSize: "18px",
+                    lineHeight: "1.6",
+                  }}
+                >
+                  Automated, global, and developer-friendly KYC solution powered
+                  by SumSub. Fast verification with modular architecture and
+                  real-time updates.
+                </Paragraph>
+
+                <Space
+                  direction="vertical"
+                  className="w-full mb-8"
+                  size="small"
+                >
+                  {keyFeatures.map((feature, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{
+                        duration: 0.4,
+                        delay: 0.2 + index * 0.1,
+                      }}
+                      className="flex items-center"
+                    >
+                      <CheckCircleOutlined
+                        className="mr-3"
+                        style={{
+                          color: token.color.green[400],
+                          fontSize: "16px",
+                        }}
+                      />
+                      <Text
+                        style={{
+                          color: token.color.grey[300],
+                          fontSize: "16px",
+                        }}
+                      >
+                        {feature}
+                      </Text>
+                    </motion.div>
+                  ))}
+                </Space>
+              </div>
+
+              <Space size="middle" className="mt-8">
+                <Link href="/kyc/entity">
                   <Button
+                    type="primary"
                     size="large"
-                    icon={<InfoCircleOutlined />}
+                    icon={<RightCircleOutlined />}
                     style={{
-                      background: token.color.lightBlue[200],
-                      color: token.color.darkViolet,
+                      backgroundColor: token.color.lightViolet[700],
+                      borderColor: token.color.lightViolet[700],
+                      height: "48px",
+                      padding: "0 28px",
                       fontWeight: 600,
-                      fontSize: token.font.size.lg,
-                      padding: "0 24px",
-                      border: "none",
+                      fontSize: "16px",
                     }}
                   >
-                    Learn More
+                    Start Verification
                   </Button>
-                </a>
+                </Link>
+                <Link href="/api-key-test">
+                  <Button
+                    type="default"
+                    size="large"
+                    icon={<FileTextOutlined />}
+                    style={{
+                      backgroundColor: "transparent",
+                      borderColor: token.color.grey[300],
+                      color: token.color.grey[300],
+                      height: "48px",
+                      padding: "0 28px",
+                      fontWeight: 500,
+                      fontSize: "16px",
+                    }}
+                  >
+                    Test API
+                  </Button>
+                </Link>
               </Space>
             </motion.div>
           </Col>

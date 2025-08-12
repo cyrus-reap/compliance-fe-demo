@@ -39,7 +39,7 @@ export default function EntitiesPage() {
   }
 
   return (
-    <div>
+    <div className="space-y-6">
       <PageHeader
         title="Entities"
         onRefresh={() => refetch()}
@@ -50,6 +50,7 @@ export default function EntitiesPage() {
             style={{
               backgroundColor: token.color.lightViolet[700],
               borderColor: token.color.lightViolet[700],
+              fontWeight: 500,
             }}
           >
             Create Entity

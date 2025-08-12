@@ -106,6 +106,10 @@ export const token: any = {
   },
   font: {
     family: {
+      // Primary fonts (Geist)
+      sans: "var(--font-geist-sans), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif",
+      mono: "var(--font-geist-mono), 'SF Mono', Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+      // Legacy DM Sans fonts (kept for backward compatibility)
       dmSans: {
         regular: "DMSans_400Regular",
         regularItalic: "DMSans_400Regular_Italic",
@@ -125,6 +129,18 @@ export const token: any = {
       "3xl": "30px",
       "3.5xl": "32px",
       "4xl": "36px",
+      "5xl": "48px",
+      "6xl": "60px",
+      "7xl": "72px",
+    },
+    weight: {
+      light: 300,
+      normal: 400,
+      medium: 500,
+      semibold: 600,
+      bold: 700,
+      extrabold: 800,
+      black: 900,
     },
     leading: {
       3: "12px",
@@ -143,7 +159,13 @@ export const token: any = {
       loose: (fontSize: number) => `${fontSize + fontSize * 2}px`,
     },
     tracking: {
-      tight: -0.16,
+      tighter: "-0.05em",
+      tight: "-0.025em",
+      normal: "0em",
+      wide: "0.025em",
+      wider: "0.05em",
+      widest: "0.1em",
+      // Legacy tracking values
       "-0.4": -0.4,
       1.6: 1.6,
     },

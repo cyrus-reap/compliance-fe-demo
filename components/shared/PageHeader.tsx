@@ -29,35 +29,53 @@ export default function PageHeader({
   extra,
 }: PageHeaderProps) {
   return (
-    <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
+    <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
       <div>
         {onBack && (
-          <div className="flex items-center gap-2 mb-1">
+          <div className="flex items-center gap-2 mb-2">
             <Button
               type="link"
               onClick={onBack}
               icon={<ArrowLeftOutlined />}
-              style={{ paddingLeft: 0 }}
+              style={{
+                paddingLeft: 0,
+                color: token.color.grey[600],
+                fontSize: "14px",
+              }}
             >
               {backText}
             </Button>
           </div>
         )}
-        <Title level={2} className="m-0 flex items-center gap-2">
+        <Title
+          level={2}
+          className="m-0 flex items-center gap-3"
+          style={{ fontSize: "24px", fontWeight: 600 }}
+        >
           {icon && icon}
           {title}
           {tooltip && (
             <Tooltip title={tooltip}>
               <InfoCircleOutlined
-                style={{ fontSize: "16px", color: token.color.grey[600] }}
+                style={{
+                  fontSize: "16px",
+                  color: token.color.grey[500],
+                }}
               />
             </Tooltip>
           )}
         </Title>
       </div>
-      <Space>
+      <Space size="middle">
         {onRefresh && (
-          <Button icon={<ReloadOutlined />} onClick={onRefresh}>
+          <Button
+            type="text"
+            onClick={onRefresh}
+            icon={<ReloadOutlined />}
+            style={{
+              color: token.color.grey[600],
+            }}
+          >
             Refresh
           </Button>
         )}

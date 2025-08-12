@@ -34,7 +34,7 @@ function QuickLink({
           background: token.color.white,
           minHeight: 320,
         }}
-        bodyStyle={{ padding: "32px 24px" }}
+        styles={{ body: { padding: "32px 24px" } }}
       >
         <div className="text-center mb-4">
           <div

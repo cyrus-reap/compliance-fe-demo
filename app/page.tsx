@@ -37,7 +37,7 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-100">
+    <div className="min-h-screen bg-white">
       <Hero />
       <QuickLinks />
       <ApiOverview carouselContent={carouselContent} />

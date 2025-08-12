@@ -6,8 +6,6 @@ import ApiRequirements from "./ApiRequirements";
 import ApiSteps from "./ApiSteps";
 import ApiFeatures from "./ApiFeatures";
 
-const { TabPane } = Tabs;
-
 interface CarouselItem {
   title: string;
   description: string;
@@ -18,6 +16,48 @@ interface ApiOverviewProps {
 }
 
 export default function ApiOverview({ carouselContent }: ApiOverviewProps) {
+  const tabItems = [
+    {
+      key: "1",
+      label: (
+        <span className="px-2 py-1" style={{ fontWeight: 600 }}>
+          <SafetyOutlined className="mr-2" />
+          Requirements
+        </span>
+      ),
+      children: (
+        <Row gutter={[48, 48]} className="items-stretch">
+          <Col xs={24} lg={11}>
+            <ApiRequirements />
+          </Col>
+          <Col xs={24} lg={2} className="hidden lg:flex justify-center">
+            <Divider
+              type="vertical"
+              style={{
+                height: "100%",
+                borderColor: token.color.lightViolet[600],
+                opacity: 0.3,
+              }}
+            />
+          </Col>
+          <Col xs={24} lg={11}>
+            <ApiSteps carouselContent={carouselContent} />
+          </Col>
+        </Row>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <span className="px-2 py-1" style={{ fontWeight: 600 }}>
+          <ApiOutlined className="mr-2" />
+          API Features
+        </span>
+      ),
+      children: <ApiFeatures />,
+    },
+  ];
+
   return (
     <div className="py-24 relative overflow-hidden">
       <div className="absolute inset-0 opacity-10 pointer-events-none overflow-hidden">
@@ -45,47 +85,7 @@ export default function ApiOverview({ carouselContent }: ApiOverviewProps) {
             borderRadius: token.border.radius["2xl"],
           }}
         >
-          <Tabs defaultActiveKey="1" type="card" className="api-overview-tabs">
-            <TabPane
-              tab={
-                <span className="px-2 py-1" style={{ fontWeight: 600 }}>
-                  <SafetyOutlined className="mr-2" />
-                  Requirements
-                </span>
-              }
-              key="1"
-            >
-              <Row gutter={[48, 48]} className="items-stretch">
-                <Col xs={24} lg={11}>
-                  <ApiRequirements />
-                </Col>
-                <Col xs={24} lg={2} className="hidden lg:flex justify-center">
-                  <Divider
-                    type="vertical"
-                    style={{
-                      height: "100%",
-                      borderColor: token.color.lightViolet[600],
-                      opacity: 0.3,
-                    }}
-                  />
-                </Col>
-                <Col xs={24} lg={11}>
-                  <ApiSteps carouselContent={carouselContent} />
-                </Col>
-              </Row>
-            </TabPane>
-            <TabPane
-              tab={
-                <span className="px-2 py-1" style={{ fontWeight: 600 }}>
-                  <ApiOutlined className="mr-2" />
-                  API Features
-                </span>
-              }
-              key="2"
-            >
-              <ApiFeatures />
-            </TabPane>
-          </Tabs>
+          <Tabs defaultActiveKey="1" type="card" className="api-overview-tabs" items={tabItems} />
         </Card>
         <div className="mt-12 text-center">
           <p

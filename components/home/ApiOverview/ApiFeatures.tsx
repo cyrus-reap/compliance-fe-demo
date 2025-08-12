@@ -94,7 +94,7 @@ export default function ApiFeatures() {
                   background: token.color.white,
                   transition: "box-shadow 0.2s",
                 }}
-                bodyStyle={{ padding: "32px 24px" }}
+                styles={{ body: { padding: "32px 24px" } }}
               >
                 <div className="text-center mb-4">
                   <div

@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { Card, Alert, Button } from "antd";
+import { Alert, Button } from "antd";
 import { useLayout } from "@/app/layoutContext";
 import { motion } from "framer-motion";
 import { useEntityVerification } from "@/hooks/useEntityVerification";
 import { VerificationStep } from "@/components/kyc/VerificationStatusSteps";
+import { token } from "@/app/theme";
 
 import VerificationStatusSteps from "@/components/kyc/VerificationStatusSteps";
 import EntityCreationStep from "@/components/kyc/EntityCreationStep";
@@ -17,7 +18,7 @@ import SecurityInfoCard from "@/components/kyc/SecurityInfoCard";
 export default function CreateEntityPage() {
   const { setOptions } = useLayout();
   const searchParams = useSearchParams();
-  const entityIdFromQuery = searchParams.get("entityId");
+  const entityIdFromQuery = searchParams?.get("entityId");
   const [started, setStarted] = useState(!!entityIdFromQuery);
 
   const {
@@ -59,32 +60,38 @@ export default function CreateEntityPage() {
   }, [setOptions]);
 
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center min-h-[60vh]">
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-4xl"
+        transition={{ duration: 0.4 }}
+        className="w-full max-w-3xl"
       >
-        <Card
-          className="shadow-lg rounded-xl overflow-hidden border-0 mb-8"
-          styles={{ body: { padding: 0 } }}
-        >
+        <div className="bg-white rounded-lg border border-gray-200 mb-6">
           {/* Show start button if not started and not continuing */}
           {!started && (
-            <div className="flex flex-col items-center justify-center py-16">
-              <h2 className="text-2xl font-semibold mb-4">
-                Begin Your Verification
+            <div className="flex flex-col items-center justify-center py-20 px-8">
+              <h2 className="text-2xl font-medium mb-3 text-gray-900">
+                Begin Identity Verification
               </h2>
-              <p className="mb-6 text-gray-500 text-center max-w-md">
-                To access all platform features, please complete the identity
-                verification process.
+              <p className="mb-8 text-gray-600 text-center max-w-md leading-relaxed">
+                Complete the verification process to access all platform
+                features.
               </p>
               <Button
                 type="primary"
                 size="large"
                 onClick={() => setStarted(true)}
                 data-testid="start-verification-btn"
+                style={{
+                  backgroundColor: token.color.lightViolet[700],
+                  borderColor: token.color.lightViolet[700],
+                  height: "48px",
+                  paddingLeft: "32px",
+                  paddingRight: "32px",
+                  fontWeight: 500,
+                }}
+                aria-label="Start the identity verification process"
               >
                 Start Verification
               </Button>
@@ -93,7 +100,7 @@ export default function CreateEntityPage() {
 
           {/* Only show steps and forms after user has started */}
           {started && (
-            <>
+            <div className="p-0">
               <VerificationStatusSteps
                 currentStep={currentStep}
                 isCreatingEntity={isCreatingEntity}
@@ -119,7 +126,7 @@ export default function CreateEntityPage() {
                 />
               )}
 
-              <div className="relative bg-white p-0">
+              <div className="relative bg-white">
                 {/* Step 1: Create the entity */}
                 {currentStep === VerificationStep.ENTITY_CREATION &&
                   !entityIdFromQuery && (
@@ -152,9 +159,9 @@ export default function CreateEntityPage() {
                     />
                   )}
               </div>
-            </>
+            </div>
           )}
-        </Card>
+        </div>
 
         {/* Security information */}
         <SecurityInfoCard />

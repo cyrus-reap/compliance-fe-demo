@@ -47,10 +47,10 @@ button,
   transition: all 0.3s ease;
 }
 
-/* Improve card hover effects */
+/* Minimalist card hover effects */
 .ant-card-hoverable:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  border-color: #806aaa;
+  box-shadow: 0 2px 8px rgba(60, 42, 89, 0.08);
 }
 
 /* Custom focus styles */
@@ -63,40 +63,78 @@ textarea:focus {
   outline-offset: 2px;
 }
 
-/* API Overview custom styles */
-.api-overview-tabs .ant-tabs-nav {
-  margin-bottom: 24px;
+/* Minimalist design improvements */
+.ant-card {
+  border-radius: 8px;
+  border: 1px solid #e9e4e4;
+  box-shadow: none;
+  transition: all 0.2s ease;
 }
 
-.api-overview-tabs .ant-tabs-tab.ant-tabs-tab-active {
-  background-color: #e0f2fe;
-  border-color: #0ea0e9;
+/* Clean button styles */
+.ant-btn-primary {
+  border-radius: 6px;
+  box-shadow: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
-.api-overview-tabs .ant-tabs-tab:hover {
-  color: #0ea0e9;
+.ant-btn-primary:hover {
+  box-shadow: 0 2px 4px rgba(60, 42, 89, 0.1);
+  transform: translateY(-1px);
 }
 
-.api-overview-tabs .ant-tabs-tab-btn {
-  padding: 4px 0;
+.ant-btn-primary:active {
+  transform: translateY(0);
 }
 
-/* Custom vertical steps */
-.custom-steps-vertical .ant-steps-item-container {
-  padding-bottom: 24px;
+/* Simplified input styles */
+.ant-input,
+.ant-select-selector {
+  border-radius: 6px;
+  border: 1px solid #e9e4e4;
+  transition: all 0.2s ease;
 }
 
-.custom-steps-vertical .ant-steps-item-icon {
-  background-color: #3c2a59;
-  border-color: #3c2a59;
+.ant-input:focus,
+.ant-select-focused .ant-select-selector {
+  border-color: #806aaa;
+  box-shadow: 0 0 0 2px rgba(128, 106, 170, 0.1);
 }
 
-.custom-steps-vertical .ant-steps-item-icon .ant-steps-icon {
-  color: white;
+/* Loading states */
+.ant-spin-blur {
+  opacity: 0.7;
+  pointer-events: none;
 }
 
-.custom-steps-vertical .ant-steps-item-content {
-  min-height: auto;
+/* Table improvements */
+.ant-table-thead > tr > th {
+  background-color: #f9f7fd;
+  border-bottom: 1px solid #e9e4e4;
+  font-weight: 600;
+}
+
+.ant-table-tbody > tr:hover > td {
+  background-color: #f9f7fd;
+}
+
+/* Focus visible for accessibility */
+.ant-btn:focus-visible,
+.ant-input:focus-visible,
+.ant-select:focus-visible {
+  outline: 2px solid #806aaa;
+  outline-offset: 2px;
+}
+
+/* Production-ready error handling */
+.error-boundary {
+  padding: 24px;
+  text-align: center;
+  background-color: #fff2f0;
+  border: 1px solid #ffccc7;
+  border-radius: 8px;
+  margin: 16px;
 }
 
 .custom-steps-vertical .ant-steps-item-title {
