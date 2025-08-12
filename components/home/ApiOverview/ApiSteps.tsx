@@ -1,3 +1,4 @@
+import React from "react";
 import { Typography, Badge, Steps } from "antd";
 import {
   ApiOutlined,
@@ -61,59 +62,57 @@ export default function ApiSteps({ carouselContent }: ApiStepsProps) {
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
     >
-      <div
-        className="p-8 rounded-2xl h-full"
-        style={{
-          background: token.color.lightViolet[100],
-          border: `1px solid ${token.color.lightViolet[600]}22`,
-          minHeight: 380,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-        }}
-      >
+      <div className="h-full">
         <Title
           level={3}
-          className="flex items-center mb-6"
+          className="mb-6"
           style={{
             fontSize: token.font.size.xl,
-            color: token.color.darkViolet,
+            color: token.color.grey[800],
+            fontWeight: 600,
           }}
         >
-          <Badge color={token.color.darkViolet} />
-          <span className="ml-2">Integration Steps</span>
+          Integration Steps
         </Title>
-        <Steps
-          direction="vertical"
-          current={-1}
-          className="custom-steps-vertical"
-          style={{
-            color: token.color.darkViolet,
-          }}
-        >
+        <div className="space-y-4">
           {integrationSteps.map((step, index) => (
-            <Step
+            <div
               key={index}
-              title={
-                <Text strong className="text-base">
-                  {step.title}
-                </Text>
-              }
-              description={
-                <Paragraph
-                  className="ml-0"
-                  style={{
-                    color: token.color.grey[700],
-                    fontSize: token.font.size.base,
-                  }}
+              className="border border-gray-200 p-4 rounded-lg hover:border-gray-300 transition-colors"
+            >
+              <div className="flex items-start">
+                <div
+                  className="mr-3 mt-1 flex items-center justify-center w-8 h-8 rounded-full"
+                  style={{ backgroundColor: token.color.lightViolet[100] }}
                 >
-                  {step.description}
-                </Paragraph>
-              }
-              icon={step.icon}
-            />
+                  <span
+                    style={{
+                      color: token.color.lightViolet[700],
+                      fontSize: 16,
+                    }}
+                  >
+                    {step.icon}
+                  </span>
+                </div>
+                <div className="flex-1">
+                  <Text
+                    strong
+                    className="block mb-1"
+                    style={{ fontSize: "0.875rem" }}
+                  >
+                    {step.title}
+                  </Text>
+                  <Text
+                    type="secondary"
+                    style={{ color: token.color.grey[600], fontSize: "0.8rem" }}
+                  >
+                    {step.description}
+                  </Text>
+                </div>
+              </div>
+            </div>
           ))}
-        </Steps>
+        </div>
       </div>
     </motion.div>
   );

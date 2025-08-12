@@ -46,21 +46,28 @@ export default function SumsubVerificationStep({
           break;
 
         case "idCheck.onApplicantSubmitted":
-          console.log("[SumSub] Applicant submitted documents");
+          if (process.env.NODE_ENV === "development") {
+            console.log("[SumSub] Applicant submitted documents");
+          }
           message.success("Verification submitted successfully!");
           onSubmitted();
           break;
 
         case "idCheck.onApplicantLoaded":
-          console.log("[SumSub] Applicant loaded:", payload);
+          if (process.env.NODE_ENV === "development") {
+            console.log("[SumSub] Applicant loaded:", payload);
+          }
           if (payload.applicantId) {
-            localStorage.setItem("sumsubApplicantId", payload.applicantId);
+            // Store in memory only, not localStorage for security
+            // localStorage.setItem("sumsubApplicantId", payload.applicantId);
           }
           setIsLoading(false);
           break;
 
         case "idCheck.onStepCompleted":
-          console.log("[SumSub] Step completed:", payload);
+          if (process.env.NODE_ENV === "development") {
+            console.log("[SumSub] Step completed:", payload);
+          }
           break;
       }
     },

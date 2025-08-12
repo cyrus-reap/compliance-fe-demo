@@ -46,27 +46,17 @@ export default function ApiRequirements() {
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
     >
-      <div
-        className="p-8 rounded-2xl h-full"
-        style={{
-          background: token.color.lightBlue[200],
-          border: `1px solid ${token.color.lightBlue[600]}22`,
-          minHeight: 380,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-        }}
-      >
+      <div className="h-full">
         <Title
           level={3}
-          className="flex items-center mb-6"
+          className="mb-6"
           style={{
             fontSize: token.font.size.xl,
-            color: token.color.lightBlue[1000],
+            color: token.color.grey[800],
+            fontWeight: 600,
           }}
         >
-          <Badge color={token.color.lightBlue[700]} />
-          <span className="ml-2">Required Information</span>
+          Required Information
         </Title>
         <div className="space-y-4">
           {requiredItems.map((item, i) => (
@@ -77,27 +67,33 @@ export default function ApiRequirements() {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              className="bg-white p-4 rounded-lg shadow-sm flex items-start"
+              className="border border-gray-200 p-4 rounded-lg hover:border-gray-300 transition-colors"
             >
-              <div className="mr-3 mt-1">
-                <CheckCircleFilled
-                  style={{
-                    color: token.color.green[600],
-                    fontSize: 20,
-                  }}
-                />
-              </div>
-              <div>
-                <Text strong className="block mb-1">
-                  {item.title}
-                </Text>
-                <Text
-                  type="secondary"
-                  className="text-sm"
-                  style={{ color: token.color.grey[600] }}
-                >
-                  {item.description}
-                </Text>
+              <div className="flex items-start">
+                <div className="mr-3 mt-1">
+                  <CheckCircleFilled
+                    style={{
+                      color: token.color.green[600],
+                      fontSize: 16,
+                    }}
+                  />
+                </div>
+                <div>
+                  <Text
+                    strong
+                    className="block mb-1"
+                    style={{ fontSize: "0.875rem" }}
+                  >
+                    {item.title}
+                  </Text>
+                  <Text
+                    type="secondary"
+                    className="text-sm"
+                    style={{ color: token.color.grey[600], fontSize: "0.8rem" }}
+                  >
+                    {item.description}
+                  </Text>
+                </div>
               </div>
             </motion.div>
           ))}
