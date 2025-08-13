@@ -38,12 +38,12 @@ export const createEntity = async (
 };
 
 /**
- * Fetches a paginated list of entities.
+ * Fetches a list of entities (with optional pagination parameters).
  *
  * @param {number} page - The current page number.
  * @param {number} limit - The number of items per page.
  * @param {string} [apiKey] - Optional API key. Falls back to system key if not provided.
- * @returns {Promise<{ items: GetAllEntitiesForUserType[]; meta: PaginationType }>} - The paginated list of entities and metadata.
+ * @returns {Promise<{ items: GetAllEntitiesForUserType[]; meta: PaginationType }>} - The list of entities and metadata.
  * @throws {Error} - Throws an error if the API request fails.
  */
 export const fetchEntities = async (
@@ -52,10 +52,12 @@ export const fetchEntities = async (
   apiKey?: string
 ): Promise<{ items: GetAllEntitiesForUserType[]; meta: PaginationType }> => {
   try {
+    // Try without pagination parameters first, as the API might not support them
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_COMPLIANCE_API_URL}/entity`,
       {
-        params: { page, limit },
+        // Remove params temporarily to test if API supports pagination
+        // params: { page, limit },
         headers: {
           accept: "application/json",
           "x-reap-api-key":
@@ -63,7 +65,23 @@ export const fetchEntities = async (
         },
       }
     );
-    return response.data;
+    
+    // If the API doesn't support pagination, we'll do client-side pagination
+    const allItems = response.data.items || response.data || [];
+    const totalItems = allItems.length;
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
+    const paginatedItems = allItems.slice(startIndex, endIndex);
+    
+    return {
+      items: paginatedItems,
+      meta: {
+        totalItems: totalItems,
+        totalPages: Math.ceil(totalItems / limit),
+        currentPage: page,
+        itemsPerPage: limit,
+      },
+    };
   } catch (error: any) {
     throw new Error(
       error.response?.data?.message || "Failed to fetch entities"
