@@ -65,14 +65,14 @@ export const fetchEntities = async (
         },
       }
     );
-    
+
     // If the API doesn't support pagination, we'll do client-side pagination
     const allItems = response.data.items || response.data || [];
     const totalItems = allItems.length;
     const startIndex = (page - 1) * limit;
     const endIndex = startIndex + limit;
     const paginatedItems = allItems.slice(startIndex, endIndex);
-    
+
     return {
       items: paginatedItems,
       meta: {

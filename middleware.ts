@@ -4,7 +4,7 @@ import type { NextRequest } from "next/server";
 export function middleware(request: NextRequest) {
   // Security headers
   const securityHeaders = {
-    // Content Security Policy - Updated for Sumsub compatibility
+    // Content Security Policy - Updated for iframe embedding
     "Content-Security-Policy": [
       "default-src 'self'",
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.sumsub.com https://api.sumsub.com https://vercel.live https://static.sumsub.com",
@@ -17,11 +17,11 @@ export function middleware(request: NextRequest) {
       "object-src 'none'",
       "base-uri 'self'",
       "form-action 'self'",
-      "frame-ancestors 'none'",
+      "frame-ancestors *", // Allow embedding in any iframe
     ].join("; "),
 
     // Other security headers
-    "X-Frame-Options": "SAMEORIGIN", // Changed from DENY to allow Sumsub iframes
+    // Removed X-Frame-Options to allow iframe embedding (CSP frame-ancestors takes precedence)
     "X-Content-Type-Options": "nosniff",
     "Referrer-Policy": "origin-when-cross-origin",
     "X-XSS-Protection": "1; mode=block",
